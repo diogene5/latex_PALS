@@ -1,0 +1,114 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[a4paper,margin=1.5cm,top=1.5cm,bottom=1.5cm]{geometry}
+\usepackage{fontspec}
+\usepackage[brazilian]{babel}
+\usepackage{xcolor}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{colortbl}
+\usepackage{tikz}
+
+% --- TIPOGRAFIA MODERNA ---
+% Tentativa de usar Avenir; se não tiver, fallback para Helvetica Neue
+\setmainfont{Helvetica Neue}[
+    Scale=1.0, 
+    BoldFont={Helvetica Neue Bold},
+    ItalicFont={Helvetica Neue Italic}
+]
+\newfontfamily\titlefont{Helvetica Neue Condensed Bold}[Scale=1.6]
+\newfontfamily\headerfont{Helvetica Neue Medium}[Scale=1.2]
+
+\pagestyle{empty}
+
+% --- CORES SUAVES ---
+\definecolor{mgPrimary}{RGB}{0, 85, 120}    % Teal dark
+\definecolor{mgSecondary}{RGB}{120, 160, 180} % Limite teal
+\definecolor{mgAccent}{RGB}{200, 80, 80}     % Alert red
+\definecolor{mgLight}{RGB}{248, 248, 248}    % Off-white
+\definecolor{mgRowA}{RGB}{255, 255, 255}
+\definecolor{mgRowB}{RGB}{245, 249, 252}
+
+% --- MACROS ---
+\newcommand{\checkbox}{$\square$}
+\newcommand{\checkedbox}{$\blacksquare$}
+
+\newcommand{\mgSection}[1]{
+    \vspace{0.4cm}
+    {\color{mgPrimary}\hrule height 1pt}
+    \vspace{0.1cm}
+    \noindent{\headerfont\color{mgPrimary} #1}
+    \vspace{0.2cm}\par
+}
+
+\begin{document}
+
+% --- HEADER ---
+\begin{center}
+    {\titlefont\color{mgPrimary} CHECKLIST CLÍNICO: OXIMETRIA DE PULSO ($SpO_2$)}\\[4pt]
+    {\small Guia de Bolso para Unidade de Terapia Intensiva | Autoria: Nick Mark MD}
+\end{center}
+\vspace{0.2cm}
+
+% --- INTRODUÇÃO ---
+{\small A oximetria de pulso estima a saturação arterial de oxigênio baseando-se na absorção diferencial de luz por hemoglobinas e no reconhecimento do fluxo pulsátil arterial. \textbf{Não substitui a gasometria em decisões críticas.}}
+
+% --- CHECKLIST 1 ---
+\mgSection{Passo 1: Validação do Sinal}
+
+Antes de intervir no paciente baseado no valor numérico da tela, verifique:
+\vspace{0.1cm}
+\begin{itemize}
+    \setlength{\itemsep}{2pt}
+    \renewcommand{\labelitemi}{\textcolor{mgSecondary}{\checkbox}}
+    \item \textbf{Qualidade da Onda Pletismográfica:} A curva apresenta pico sistólico claro e incisura dicrótica (sinal de perfusão adequada)?
+    \item \textbf{Frequência Cardíaca Consistente:} O ritmo ($bpm$) lido no oxímetro bate com a frequência cardíaca mostrada no traçado de ECG do monitor?
+    \item \textbf{Posicionamento do Sensor:} O LED vermelho está perfeitamente alinhado com o fotorreceptor do lado oposto do leito vascular?
+\end{itemize}
+
+% --- CHECKLIST 2 ---
+\mgSection{Passo 2: Descarte de Interferências Comuns}
+
+Se o sinal for ruim ou duvidoso, atue sobre as possíveis causas físicas:
+\vspace{0.1cm}
+\begin{itemize}
+    \setlength{\itemsep}{2pt}
+    \renewcommand{\labelitemi}{\textcolor{mgSecondary}{\checkbox}}
+    \item \textbf{Má Perfusão Periférica?} (Choque, hipotermia, vasopressores). \emph{Ação:} Mude o clipe para um sítio central (lóbulo da orelha ou testa).
+    \item \textbf{Barreira Óptica?} (Esmalte escuro, sujeira). \emph{Ação:} Limpe o dedo ou mude a posição do probe (90 graus).
+    \item \textbf{Saturação por Luz Ambiente?} (Refletores cirúrgicos, fototerapia). \emph{Ação:} Cubra o sensor do oxímetro com um material opaco.
+    \item \textbf{Lag Time Fisiológico?} O atraso entre uma queda real do oxigênio central e a leitura no dedo pode ser de 15 a 60 segundos.
+\end{itemize}
+
+% --- TABELA DE SEGURANÇA ---
+\mgSection{Passo 3: Identificação de Hemoglobinas Anormais}
+
+Condições que invalidam completamente a leitura do $SpO_2$:
+\vspace{0.2cm}
+\begin{center} \small
+\rowcolors{1}{mgRowB}{mgRowA} % Tabela com linhas zebradas
+\begin{tabular}{p{3.5cm} p{4cm} p{7cm}}
+\toprule
+\textbf{Condição / Fator} & \textbf{Leitura Resultante} & \textbf{Conduta / Alerta} \\
+\midrule
+Carboxihemoglobina \newline (Ex: Fumaça/Incêndio) & \textcolor{mgAccent}{\textbf{Falsa Normalidade}} \newline ($\sim$ 100\%) & O $CO$ tem absorção idêntica ao oxigênio em 660nm. Oximetria é inútil. Solicitar Co-Oximetria. \\
+Metemoglobina \newline (Ex: Trato c/ Dapsona) & \textbf{Leitura "Travada"} \newline ($\sim$ 85\%) & Absorve luz uniformemente, forçando o cálculo num platô artificial de 85\%. \\
+Hiperpigmentação \newline (Pele Escura) & \textbf{Superestimação} \newline (+2\% a +4\%) & Risco grave de \emph{hipoxemia oculta}. Sempre que houver suspeita, basear conduta na Gasometria Arterial. \\
+Azul de Metileno & \textbf{Queda Abrupta} \newline ($\sim$ 65\%) & Fenômeno transitório ($1-2$ minutos) pós injeção do corante. Não intervir. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+% --- REGRA DE OURO ---
+\vspace{0.8cm}
+\begin{center}
+    \fcolorbox{mgPrimary}{mgLight}{
+        \parbox{12cm}{
+            \centering\vspace{0.2cm}
+            {\headerfont\color{mgAccent} A REGRA DE OURO DA OXIMETRIA}\\[4pt]
+            Sempre que a clínica do paciente (trabalho respiratório, agitação, cianose) não for compatível com a leitura animadora do oxímetro de pulso, \textbf{acredite no paciente}.\\ Colha imediatamente uma \textbf{Gasometria Arterial} com cálculo do $SaO_2$ real.
+            \vspace{0.2cm}
+        }
+    }
+\end{center}
+
+\end{document}

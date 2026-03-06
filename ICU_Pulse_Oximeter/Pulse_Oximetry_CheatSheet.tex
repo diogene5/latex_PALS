@@ -1,0 +1,167 @@
+\documentclass[9pt,landscape,a4paper]{article}
+\usepackage[landscape,margin=0.5cm,top=0.6cm,bottom=0.6cm]{geometry}
+\usepackage{fontspec}
+\usepackage[brazilian]{babel}
+\usepackage{xcolor}
+\usepackage{multicol}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{tikz}
+
+% --- TIPOGRAFIA ---
+% Fira Sans para visual clean e condensado
+\setmainfont{Helvetica Neue}[
+    Scale=0.85, 
+    BoldFont={Helvetica Neue Bold},
+    ItalicFont={Helvetica Neue Italic}
+]
+\newfontfamily\titlefont{Helvetica Neue Condensed Bold}[Scale=1.2]
+\newfontfamily\headerfont{Helvetica Neue Condensed Bold}[Scale=1.0]
+
+\pagestyle{empty}
+
+% --- AJUSTES DE ESPAÇAMENTO (CHEAT SHEET) ---
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt plus 0.5ex}
+\setlength{\columnsep}{0.4cm}
+\setlength{\columnseprule}{0.2pt}
+
+% --- CORES ---
+\definecolor{csDark}{RGB}{40, 40, 40}
+\definecolor{csAccent}{RGB}{0, 100, 180}
+\definecolor{csLight}{RGB}{240, 240, 240}
+
+% --- MACROS ---
+\newcommand{\csTitle}[1]{
+    \begin{center}
+        \colorbox{csDark}{\parbox{\dimexpr\linewidth-2\fboxsep\relax}{\centering\color{white}\titlefont\large #1}}
+    \end{center}
+    \vspace{-0.2cm}
+}
+
+\newcommand{\csSection}[1]{
+    \vspace{0.2cm}
+    \colorbox{csAccent}{\parbox{\dimexpr\linewidth-2\fboxsep\relax}{\color{white}\headerfont #1}}
+    \vspace{0.1cm}
+}
+
+\begin{document}
+\begin{multicols*}{4}
+
+\csTitle{OXIMETRIA DE PULSO ($SpO_2$)}
+{\scriptsize \textbf{Por:} Nick Mark MD | \textbf{Trad:} Equipe ICU}
+
+\csSection{Princípio Básico}
+A oximetria mede a saturação arterial de oxigênio de forma não-invasiva baseando-se em dois princípios:
+
+\textbf{1. Absorção Diferencial de Luz}
+Emissão em clipe (dedo/orelha) em dois comprimentos de onda:
+\begin{itemize}
+    \setlength{\itemsep}{1pt}
+    \renewcommand{\labelitemi}{\textcolor{csAccent}{\tiny$\blacksquare$}}
+    \item \textbf{Vermelho (660nm):} Altamente absorvido por $Hb$ (desoxa).
+    \item \textbf{Infravermelho (940nm):} Altamente ab. por $HbO_2$ (oxa).
+\end{itemize}
+
+\textbf{2. Fator Pulsátil (Pletismografia)}
+A absorção constante (osso, tecido, sangue venoso) é ignorada. Apenas a absorção \emph{variável} (sangue arterial pulsante na sístole) é computada.
+
+\begin{center}
+\begin{tikzpicture}[scale=0.65, font=\sffamily\tiny]
+    \fill[csLight] (-0.3,-0.3) rectangle (5.3,2.8);
+    \draw[->] (0,0) -- (5,0) node[right=-2pt] {$\lambda$};
+    \draw[->] (0,0) -- (0,2.5) node[above=-2pt] {Abs.};
+    \draw[thick, red] (0.2, 2.2) .. controls (1.5, 1.8) and (3, 0.5) .. (4.5, 0.4) node[right] {$HbO_2$};
+    \draw[thick, blue] (0.2, 0.4) .. controls (1.5, 0.8) and (3, 2.2) .. (4.5, 2.2) node[right] {$Hb$};
+    \draw[dashed, gray] (1.0,0) -- (1.0,2.5); \node[above] at (1.0,2.5) {660};
+    \draw[dashed, gray] (3.8,0) -- (3.8,2.5); \node[above] at (3.8,2.5) {940};
+\end{tikzpicture}
+\end{center}
+
+\csSection{Curva de Dissociação}
+O $SpO_2$ \textbf{não} é a mesma coisa que oxigênio dissolvido ($PaO_2$).
+\begin{itemize}
+    \setlength{\itemsep}{1pt}
+    \renewcommand{\labelitemi}{\textcolor{csAccent}{\tiny$\blacksquare$}}
+    \item \textbf{Segurança (Platô):} $PaO_2 > 60$ mmHg $\rightarrow$ $SpO_2 > 90\%$. Acima disso, oxímetro é insensível a aumentos de $PaO_2$.
+    \item \textbf{Perigo (Descida):} Queda no $SpO_2$ abaixo de 90\% significa redução DRÁSTICA do $PaO_2$.
+\end{itemize}
+
+\csSection{Interferências}
+A precisão cai severamente se o $SpO_2$ real for $< 80\%$. 
+
+\textbf{1. Má Circulação (Baixo fluxo pulsátil)}
+Choque, frio, vasopressores em alta dose. 
+\emph{Ação:} Usar clipe de orelha (mais responsivo).
+
+\textbf{2. Barreiras Físicas}
+\begin{itemize}
+    \setlength{\itemsep}{1pt}
+    \renewcommand{\labelitemi}{\textcolor{csAccent}{\tiny$\blacksquare$}}
+    \item \textbf{Esmalte:} Preto, azul e verde bloqueiam a luz.
+    \item \textbf{Luz:} Refletores fortes saturam o sensor.
+    \item \textbf{Movimento:} Tremores causam artefato pulsátil.
+\end{itemize}
+
+\textbf{Cor de Pele (Viés Racial)}
+\emph{Alerta Crítico:} Oxímetros frequentemente superestimam o $SaO_2$ real em pacientes com pele escura, causando \textbf{hipoxemia oculta} (SpO2 normal, mas PaO2 crítico).
+
+\csSection{Hemoglobinas Anormais}
+
+\textbf{1. Carboxihemoglobina (COHb)}
+\begin{itemize}
+    \setlength{\itemsep}{1pt}
+    \renewcommand{\labelitemi}{\textcolor{csAccent}{\tiny$\blacksquare$}}
+    \item \textbf{Causa:} Monóxido de carbono (fumaça).
+    \item \textbf{Problema:} Absorção idêntica ao $HbO_2$.
+    \item \textbf{Lê:} \textbf{$\sim$100\%} mesmo em hipóxia letal.
+\end{itemize}
+
+\textbf{2. Metemoglobina (MetHb)}
+\begin{itemize}
+    \setlength{\itemsep}{1pt}
+    \renewcommand{\labelitemi}{\textcolor{csAccent}{\tiny$\blacksquare$}}
+    \item \textbf{Causa:} Dapsona, benzocaína, nitratos.
+    \item \textbf{Lê:} Congela em \textbf{$\sim$85\%}.
+\end{itemize}
+
+\csSection{Tabela Resumo}
+\begin{center}
+\scriptsize
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Fator} & \textbf{Efeito no $SpO_2$} \\ \midrule
+COHb (CO) & Falsamente normal \\
+MetHb & Fixo perto de 85\% \\
+Pele Escura & Risco de sobrestimar \\
+Esmalte azul & Falsamente baixo \\
+Movimento & Erro errático \\
+Choque & Sinal ruim / Inviável \\
+Azul de Met. & Queda súbita espúria \\ \bottomrule
+\end{tabular}
+\end{center}
+
+\csSection{Validação pelo Monitor}
+\emph{Nunca confie num número sem olhar a curva pletismográfica!}
+\begin{center}
+\begin{tikzpicture}[scale=0.9, font=\sffamily\tiny]
+    \draw[gray, opacity=0.3] (0,0) grid (4,1);
+    \draw[thick, csDark] (0,0.1) .. controls (0.2,0.1) and (0.3,0.9) .. (0.5,0.9) 
+         .. controls (0.7,0.9) and (0.8,0.4) .. (0.9,0.5) 
+         .. controls (1.0,0.6) and (1.2,0.1) .. (1.6,0.1)
+         .. controls (1.8,0.1) and (1.9,0.9) .. (2.1,0.9)
+         .. controls (2.3,0.9) and (2.4,0.4) .. (2.5,0.5) 
+         .. controls (2.6,0.6) and (2.8,0.1) .. (3.2,0.1);
+    \node[anchor=south] at (0.5,0.9) {Sístole};
+    \node[anchor=west] at (1.0,0.5) {Incisura};
+\end{tikzpicture}
+\end{center}
+O ritmo ($bpm$) deve bater com o do ECG. A presença da \textbf{incisura dicrótica} (fechamento aórtico) atesta boa perfusão periférica.
+
+\vspace{0.4cm}
+\begin{center}
+    \fbox{\parbox{4cm}{\centering\textbf{PADRÃO-OURO:}\\ Na dúvida, sempre colha Gasometria Arterial ($SaO_2$, $PaO_2$, Co-oximetria).}}
+\end{center}
+
+\end{multicols*}
+\end{document}
