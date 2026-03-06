@@ -1,0 +1,188 @@
+\documentclass[9pt,a4paper]{article}
+\usepackage[a4paper,margin=1.2cm,top=1.2cm,bottom=1.2cm]{geometry}
+\usepackage{fontspec}
+\usepackage[brazilian]{babel}
+
+% --- TIPOGRAFIA (NEJM Style) ---
+\setmainfont{Charter}[
+  Scale=1.0,
+  Ligatures=TeX,
+  Contextuals=Alternate
+]
+\setsansfont{Helvetica Neue}[Scale=0.9]
+\newfontfamily\titlefont{Helvetica Neue Condensed Bold}[Scale=1.1]
+\newfontfamily\headerfont{Helvetica Neue Bold}[Scale=0.9]
+
+% --- PACOTES ---
+\usepackage{microtype} % Justificação e kerning superiores
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{multicol}
+\usepackage{amsmath}
+\usepackage{tikz}
+\usetikzlibrary{calc, positioning, arrows.meta}
+
+% --- CORES NEJM ---
+\definecolor{nejmBlue}{RGB}{0, 75, 145}
+\definecolor{nejmGray}{RGB}{80, 80, 80}
+\definecolor{nejmLightGray}{RGB}{245, 245, 245}
+
+\pagestyle{empty}
+
+% --- AJUSTES DE ESPAÇAMENTO ---
+\setlength{\columnsep}{0.6cm}
+\setlength{\columnseprule}{0.4pt}
+\renewcommand{\columnseprulecolor}{\color{nejmLightGray}}
+
+% --- MACROS ---
+\newcommand{\dropcap}[1]{{\color{nejmBlue}\fontsize{24}{28}\selectfont\bfseries #1}}
+
+\newcommand{\quicktake}[1]{%
+    \begin{center}
+    \fcolorbox{nejmBlue}{nejmLightGray}{%
+        \begin{minipage}{\dimexpr\linewidth-10pt}
+            \vspace{2pt}
+            {\headerfont\small\textcolor{nejmBlue}{QUICK TAKE}}\\[2pt]
+            {\scriptsize #1}
+            \vspace{2pt}
+        \end{minipage}%
+    }
+    \end{center}
+}
+
+\newcommand{\sectionheader}[1]{%
+    \vspace{0.3cm}
+    \noindent{\headerfont\small\textcolor{nejmBlue}{\MakeUppercase{#1}}}%
+    \par\vspace{1pt}\hrule height 0.8pt color nejmBlue
+    \vspace{0.15cm}
+}
+
+\begin{document}
+
+% === HEADER NEJM STYLE ===
+\noindent
+\begin{minipage}[b]{0.7\textwidth}
+    {\fontsize{8}{10}\selectfont\headerfont\textcolor{nejmGray}{CLINICAL PRACTICE}} \\[4pt]
+    {\titlefont\fontsize{22}{24}\selectfont\textcolor{black}{Pulse Oximetry in Critical Care}}
+\end{minipage}\hfill
+\begin{minipage}[b]{0.28\textwidth}
+    \begin{flushright}
+        {\fontsize{7}{9}\selectfont\headerfont\textcolor{nejmBlue}{ONE PAGER ICU}} \\
+        {\fontsize{7}{9}\selectfont\textit{Tradução Técnica e Adaptação}} \\
+        {\fontsize{7}{9}\selectfont\textcolor{nejmGray}{2025 Edition}}
+    \end{flushright}
+\end{minipage}
+
+\vspace{0.2cm}
+\hrule height 2pt color nejmBlue
+\vspace{0.1cm}
+\hrule height 0.5pt color nejmGray
+\vspace{0.4cm}
+
+\begin{multicols}{2}
+
+\dropcap{P}ulse oximetry is a ubiquitous noninvasive technology used for continuous monitoring of arterial oxygen saturation ($SpO_2$). In the intensive care unit (ICU), it serves as a critical surrogate for arterial blood gas analysis ($SaO_2$), enabling rapid detection of hypoxemia. However, the apparent simplicity of the technology masks complex physical principles and significant clinical limitations that can lead to diagnostic errors.
+
+\sectionheader{Physiological Principles}
+The technology relies on \textbf{spectrophotometry} and \textbf{plethysmography}. It exploits the fact that oxygenated hemoglobin ($HbO_2$) and deoxygenated hemoglobin ($Hb$) have distinct absorption spectra. 
+
+\textit{Beer-Lambert Law}: The amount of light absorbed is proportional to the concentration of the absorbing substance and the path length. Pulse oximeters use two specific wavelengths:
+\begin{itemize}
+    \setlength{\itemsep}{0pt}
+    \item \textbf{Red (660\,nm)}: Highly absorbed by $Hb$.
+    \item \textbf{Infrared (940\,nm)}: Highly absorbed by $HbO_2$.
+\end{itemize}
+
+\textit{Plethysmography}: To isolate arterial saturation, the device identifies the \textbf{pulsatile component} (AC) of the signal, which represents the varying volume of arterial blood, and filters out the constant absorption (DC) from tissue, venous blood, and bone.
+
+\vspace{0.3cm}
+\begin{center}
+\begin{tikzpicture}[scale=0.8, font=\sffamily\tiny]
+    \draw[->, nejmGray] (0,0) -- (5.5,0) node[right, nejmBlue] {$\lambda$ (nm)};
+    \draw[->, nejmGray] (0,0) -- (0,3.5) node[above, nejmBlue] {Absorp.};
+    
+    % Curvas (Nature/NEJM style)
+    \draw[thick, red!80!black] (0.5, 3.2) .. controls (1.5, 2.5) and (3, 1) .. (5, 0.5) node[right] {$HbO_2$};
+    \draw[thick, blue!80!black] (0.5, 0.4) .. controls (1.5, 1.2) and (3, 2.8) .. (5, 2.8) node[right] {$Hb$};
+    
+    % LED bars
+    \fill[red, opacity=0.1] (0.9, 0) rectangle (1.1, 3.5);
+    \draw[red!50, dashed] (1.0, 0) -- (1.0, 3.5) node[above] {660};
+    \fill[orange, opacity=0.1] (4.4, 0) rectangle (4.6, 3.5);
+    \draw[orange!50, dashed] (4.5, 0) -- (4.5, 3.5) node[above] {940};
+\end{tikzpicture}
+\end{center}
+
+\quicktake{Pulse oximetry measures $SpO_2$, not $PaO_2$. In hyperoxemia ($SpO_2 = 100\%$), the device cannot detect dangerously high oxygen partial pressures (hyperoxia), which may contribute to oxidative stress.}
+
+\sectionheader{Clinical Accuracy and Bias}
+The accuracy of $SpO_2$ is typically $\pm 2\%$ when saturations are above 80\%. Below 70\%, the correlation with $SaO_2$ deteriorates significantly as the device's empirical calibration curves are derived from healthy volunteers.
+
+\textbf{Skin Pigmentation and Racial Bias}: 
+Multiple studies have demonstrated that pulse oximetry may \textbf{overestimate} $SaO_2$ in patients with dark skin. This bias leads to "occult hypoxemia," where patients are triaged as stable despite real saturations being dangerously low. Black patients face a 3-fold higher risk of this diagnostic error compared to white patients.
+
+\textbf{Low Perfusion States}: 
+In states of shock, severe vasoconstriction, or hypothermia, the pulsatile signal may be too weak to detect. The \textbf{Perfusion Index (PI)} can quantify this; a PI below 0.4\% often indicates unreliable data.
+
+\sectionheader{Abnormal Hemoglobins}
+\begin{itemize}
+    \setlength{\itemsep}{0pt}
+    \item \textbf{Carboxyhemoglobin ($COHb$)}: CO has a similar absorption to $HbO_2$ at 660\,nm. Consequently, $SpO_2$ remains near 100\% even in lethal CO poisoning.
+    \item \textbf{Methemoglobin ($MetHb$)}: Distorts absorption at both wavelengths, usually resulting in a "plateau" reading around 85\%.
+\end{itemize}
+
+\sectionheader{Waveform Analysis}
+Verification of the plethysmographic waveform is essential. A high-quality wave should show clear systolic and diastolic phases.
+
+\vspace{0.2cm}
+\begin{center}
+\begin{tikzpicture}[scale=0.9, font=\sffamily\tiny]
+    \draw[->, nejmGray] (0,0) -- (4.5,0);
+    \draw[thick, nejmBlue] (0.2, 0.1) .. controls (0.4, 0.1) and (0.5, 1.4) .. (0.7, 1.4) 
+         .. controls (0.9, 1.4) and (1.0, 0.6) .. (1.1, 0.7) 
+         .. controls (1.2, 0.8) and (1.6, 0.1) .. (2.0, 0.1)
+         .. controls (2.2, 0.1) and (2.3, 1.4) .. (2.5, 1.4)
+         .. controls (2.7, 1.4) and (2.8, 0.6) .. (2.9, 0.7)
+         .. controls (3.0, 0.8) and (3.4, 0.1) .. (3.8, 0.1);
+    \node[anchor=south, nejmBlue, font=\bfseries] at (0.7, 1.4) {Systole};
+    \node[anchor=west, nejmGray] at (1.1, 0.8) {Dicrotic Notch};
+\end{tikzpicture}
+\end{center}
+
+\sectionheader{Interferences and Technical Pitfalls}
+External factors like nail polish (especially black, blue, and green) and bright ambient lighting can saturate the detector. For patients with suspected circulatory failure, a probe placed on the forehead or earlobe may provide more rapid and reliable data than finger probes.
+
+\sectionheader{Final Considerations \& Clinical Pearls}
+\begin{itemize}
+    \setlength{\itemsep}{0pt}
+    \item \textbf{Ear Loop vs. Finger}: The earloop probe is less susceptible to vasoconstriction-induced error.
+    \item \textbf{Pulse rate vs. EKG}: Always ensure the plethysmographic pulse rate matches the EKG heart rate.
+    \item \textbf{Methylene Blue}: Can cause a precipitate drop in $SpO_2$ to 65\% within 1--2 minutes of administration.
+\end{itemize}
+
+\vspace{0.2cm}
+\begin{center}
+\begin{tabular}{lp{4.2cm}}
+    \toprule
+    \textbf{Factor} & \textbf{Clinical Impact on $SpO_2$} \\
+    \midrule
+    $COHb$ & Falsely normal; masks hypoxia \\
+    $MetHb$ & Fixed reading near $\sim$85\% \\
+    Skin Tone & Potential overestimation ($>$ 4\%) \\
+    Shock & Signal loss or instability \\
+    Methylene Blue & Spurious sudden drop \\
+    \bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{0.2cm}
+\noindent\textit{Authoritative Note}: When $SpO_2$ values conflict with clinical observation, \textbf{arterial blood gas analysis with co-oximetry} remains the mandatory gold standard for definitive diagnosis.
+
+\end{multicols}
+
+\vspace{0.4cm}
+\hrule height 0.5pt
+\vspace{1pt}
+\noindent {\fontsize{6}{8}\selectfont \textcolor{nejmGray}{Copyright \copyright\ 2025 ICU Reference Group. All rights reserved. Source material adapted from Nick Mark, MD, for academic dissemination.}}
+
+\end{document}
