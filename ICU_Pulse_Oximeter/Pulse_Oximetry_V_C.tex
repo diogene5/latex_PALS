@@ -1,0 +1,222 @@
+\documentclass[10pt]{article}
+\usepackage[paperwidth=42cm, paperheight=29.7cm, margin=0pt]{geometry}
+\usepackage{fontspec}
+\usepackage{microtype}
+\usepackage[brazil]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usetikzlibrary{calc, positioning, arrows.meta, shapes.geometric, decorations.pathreplacing, fit, backgrounds}
+
+% === TIPOGRAFIA (Swiss Poster) ===
+\setmainfont{Gill Sans}
+\setsansfont{Gill Sans}
+\newfontfamily\titlefont{Futura}[LetterSpace=12]
+\newfontfamily\headerfont{Futura}[LetterSpace=5]
+
+% === PALETA SWISS ===
+\definecolor{deepblue}{RGB}{15, 23, 42}     % Sections escuras
+\definecolor{coral}{RGB}{239, 68, 68}       % Acento coral
+\definecolor{skyblue}{RGB}{14, 165, 233}    % SpO2 / OxyHb
+\definecolor{amber}{RGB}{245, 158, 11}      % IR / acento
+\definecolor{slate50}{RGB}{248, 250, 252}   % Fundo claro
+\definecolor{slate200}{RGB}{226, 232, 240}  % Bordas
+\definecolor{slate700}{RGB}{51, 65, 85}     % Texto secundário
+
+\usepackage{xcolor}
+\pagestyle{empty}
+
+% === MACRO: Bloco de cor sólida ===
+\newcommand{\colorblock}[3]{% {cor bg}{cor texto}{conteúdo}
+    \begin{tikzpicture}
+        \node[rectangle, fill=#1, text=#2, inner sep=12pt,
+              text width=\linewidth-24pt, align=left,
+              font=\normalsize] {#3};
+    \end{tikzpicture}%
+}
+
+\newcommand{\titem}[1]{%
+    \noindent\hangindent=1.5em\hangafter=1%
+    {\footnotesize$\blacktriangleright$}\hspace{0.5em}#1\par\vspace{3pt}%
+}
+
+\begin{document}
+\noindent
+\begin{tikzpicture}[remember picture, overlay]
+    \fill[deepblue] (current page.north west) rectangle ([yshift=-4.5cm]current page.north east);
+\end{tikzpicture}
+
+% === HEADER BAR ===
+\noindent
+\begin{minipage}[c][\dimexpr4.5cm\relax][c]{\textwidth}
+    \hspace{2cm}%
+    \begin{minipage}[c]{0.6\textwidth}
+        {\titlefont\fontsize{42}{48}\selectfont\color{white}\MakeUppercase{Oximetria de Pulso}}\\[6pt]
+        {\headerfont\large\color{slate200}Monitorização Contínua da Saturação Arterial de Oxigênio}
+    \end{minipage}\hfill
+    \begin{minipage}[c]{0.3\textwidth}
+        \begin{flushright}
+            {\headerfont\color{amber}\Large ONE PAGER ICU}\\[3pt]
+            {\small\color{slate200}\textit{Nick Mark, MD} $\cdot$ Tradução}\\[2pt]
+            {\footnotesize\color{slate700}onepagericu.com}
+        \end{flushright}
+    \end{minipage}%
+    \hspace{2cm}
+\end{minipage}
+
+\vspace{0.6cm}
+
+% === CORPO PRINCIPAL ===
+\noindent\hspace{2cm}%
+\begin{minipage}[t]{\dimexpr\textwidth-4cm\relax}
+
+% --- PRINCÍPIO (barra colorida) ---
+\colorblock{deepblue}{white}{%
+    {\headerfont\large\MakeUppercase{Princípio Fisiológico}}\\[6pt]
+    A oximetria de pulso explora a absorção diferencial de luz entre a hemoglobina oxigenada (OxyHb) e desoxigenada (DeoxyHb) nos espectros \textbf{vermelho} (660\,nm) e \textbf{infravermelho} (940\,nm). O componente pulsátil (AC) isola a contribuição arterial.
+}
+
+\vspace{0.5cm}
+
+% --- GRID DE 2 COLUNAS: DIAGRAMAS ---
+\noindent
+\begin{minipage}[t]{0.48\textwidth}
+    \colorblock{slate50}{deepblue}{%
+        {\headerfont\normalsize\color{deepblue}\MakeUppercase{Mecânica do Sensor}}\\[8pt]
+        \begin{center}
+        \begin{tikzpicture}[scale=1.2, font=\sffamily\small]
+            % Dedo técnico
+            \draw[thick, slate700, fill=slate50!50] (-2.2, -0.7) .. controls (1, -0.7) and (1.5, -0.5) .. (1.8, 0) .. controls (1.5, 0.5) and (1, 0.7) .. (-2.2, 0.7);
+            \draw[slate200] (0.8, 0.5) .. controls (1.5, 0.5) and (1.8, 0.3) .. (1.8, 0) .. controls (1.8, -0.3) and (1.5, -0.5) .. (0.8, -0.5);
+            % Sensor
+            \fill[deepblue] (-0.8, 1.0) rectangle (1.0, 1.4);
+            \fill[deepblue] (-0.8, -1.0) rectangle (1.0, -1.4);
+            \node[white, font=\tiny\headerfont] at (0.1, 1.2) {LED};
+            \node[white, font=\tiny\headerfont] at (0.1, -1.2) {SENSOR};
+            % Raios
+            \draw[dashed, coral, -Latex, thick] (0.0, 0.95) -- (0.0, -0.95);
+            \draw[dashed, amber, -Latex, thick] (0.4, 0.95) -- (0.4, -0.95);
+            \node[right, coral, font=\tiny] at (0.0, 0.5) {660nm};
+            \node[right, amber, font=\tiny] at (0.4, -0.5) {940nm};
+        \end{tikzpicture}
+        \end{center}
+    }
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\textwidth}
+    \colorblock{slate50}{deepblue}{%
+        {\headerfont\normalsize\color{deepblue}\MakeUppercase{Espectro de Absorção}}\\[8pt]
+        \begin{center}
+        \begin{tikzpicture}[scale=0.85, font=\sffamily\small]
+            \draw[->, slate700] (0,0) -- (6.2,0) node[right, scale=0.7] {nm};
+            \draw[->, slate700] (0,0) -- (0,4.2) node[above, scale=0.7] {Abs};
+            \draw[ultra thick, skyblue] (0, 3.5) .. controls (2, 2.8) and (3, 2) .. (5.5, 1) node[right, scale=0.7] {\textbf{OxyHb}};
+            \draw[ultra thick, coral] (0, 1) .. controls (1, 2) and (2, 3) .. (3, 3) .. controls (4, 3) and (5, 2.2) .. (5.5, 2.2) node[right, scale=0.7] {\textbf{DeoxyHb}};
+            \draw[dotted, deepblue, thick] (0.8, 0) -- (0.8, 4) node[above, scale=0.6] {\textbf{RED}};
+            \draw[dotted, deepblue, thick] (4.8, 0) -- (4.8, 4) node[above, scale=0.6] {\textbf{IR}};
+        \end{tikzpicture}
+        \end{center}
+    }
+\end{minipage}
+
+\vspace{0.5cm}
+
+% --- GRID 4 COLUNAS: FATORES DE PRECISÃO ---
+\colorblock{deepblue}{amber}{{\headerfont\large\MakeUppercase{Fatores que Afetam a Precisão}}}
+
+\vspace{0.3cm}
+
+\noindent
+\begin{minipage}[t]{0.24\textwidth}
+    \colorblock{coral}{white}{%
+        {\headerfont\small\MakeUppercase{Pigmentação}}\\[4pt]
+        {\footnotesize
+        SpO\textsubscript{2} pode \textbf{superestimar} em pele negra.
+        Pacientes negros: \textbf{3$\times$} mais risco de hipoxemia oculta.\\[4pt]
+        Esmaltes escuros (azul, verde, preto) interferem no sinal.
+        }
+    }
+\end{minipage}\hfill
+\begin{minipage}[t]{0.24\textwidth}
+    \colorblock{skyblue}{white}{%
+        {\headerfont\small\MakeUppercase{Hemoglobinas}}\\[4pt]
+        {\footnotesize
+        \textbf{CoHb:} Falsamente normal.\\
+        \textbf{MetHb:} Trava em $\sim$85\%.\\
+        \textbf{SulfaHb:} Falsa baixa.\\[4pt]
+        Co-oximetria (4+ ondas) resolve.
+        }
+    }
+\end{minipage}\hfill
+\begin{minipage}[t]{0.24\textwidth}
+    \colorblock{amber}{deepblue}{%
+        {\headerfont\small\MakeUppercase{Baixo Fluxo}}\\[4pt]
+        {\footnotesize
+        Choque e vasoconstrição reduzem o sinal pulsátil.\\[4pt]
+        ECMO/LVAD: fluxo não-pulsátil torna oximetria inútil.
+        }
+    }
+\end{minipage}\hfill
+\begin{minipage}[t]{0.24\textwidth}
+    \colorblock{slate700}{white}{%
+        {\headerfont\small\MakeUppercase{Técnicas}}\\[4pt]
+        {\footnotesize
+        \textbf{Lag:} 5--15s periférico.\\
+        \textbf{Calibração:} Imprecisa $<$75\%.\\
+        \textbf{Corantes:} Falsas quedas.\\
+        \textbf{Hiperoxemia:} Não detectada.
+        }
+    }
+\end{minipage}
+
+\vspace{0.5cm}
+
+% --- ONDAS PLETISMOGRÁFICAS (barra inferior) ---
+\noindent
+\begin{minipage}[t]{0.35\textwidth}
+    \colorblock{deepblue}{white}{%
+        {\headerfont\normalsize\MakeUppercase{Onda Pletismográfica}}\\[6pt]
+        {\footnotesize A morfologia da onda fornece informações sobre tônus vascular. Componentes sistólicos e diastólicos indicam a compliance arterial.}
+    }
+\end{minipage}\hfill
+\begin{minipage}[t]{0.60\textwidth}
+    \centering
+    \begin{tikzpicture}[scale=0.55, font=\headerfont\scriptsize]
+        % Normal
+        \node[left, deepblue, font=\headerfont\footnotesize\bfseries] at (-0.5, 0.5) {NORMAL};
+        \draw[thick, skyblue] (0,0) .. controls (0.2,0) and (0.4,1) .. (0.5,1) .. controls (0.6,1) and (0.7,0.4) .. (0.8,0.4) .. controls (0.9,0.8) and (1.5,0) .. (2,0)
+                               (2,0) .. controls (2.2,0) and (2.4,1) .. (2.5,1) .. controls (2.6,1) and (2.7,0.4) .. (2.8,0.4) .. controls (2.9,0.8) and (3.5,0) .. (4,0);
+
+        % Fraco
+        \begin{scope}[shift={(5,0)}]
+            \node[left, deepblue, font=\headerfont\footnotesize\bfseries] at (-0.5, 0.15) {FRACO};
+            \draw[thick, slate700] (0,0) .. controls (0.2,0) and (0.4,0.3) .. (0.5,0.3) .. controls (0.6,0.3) and (0.7,0.1) .. (0.8,0.1) .. controls (0.9,0.2) and (1.5,0) .. (2,0)
+                                    (2,0) .. controls (2.2,0) and (2.4,0.3) .. (2.5,0.3) .. controls (2.6,0.3) and (2.7,0.1) .. (2.8,0.1) .. controls (2.9,0.2) and (3.5,0) .. (4,0);
+        \end{scope}
+
+        % Vasoconstrição
+        \begin{scope}[shift={(10,0)}]
+            \node[left, deepblue, font=\headerfont\footnotesize\bfseries] at (-0.5, 0.5) {VASO$\uparrow$};
+            \draw[thick, coral] (0,0) .. controls (0.2,0) and (0.4,1) .. (0.5,1) .. controls (0.6,1) and (0.7,0.7) .. (0.8,0.7) .. controls (0.9,0.9) and (1.5,0) .. (2,0)
+                                 (2,0) .. controls (2.2,0) and (2.4,1) .. (2.5,1) .. controls (2.6,1) and (2.7,0.7) .. (2.8,0.7) .. controls (2.9,0.9) and (3.5,0) .. (4,0);
+        \end{scope}
+
+        % Vasodilatação
+        \begin{scope}[shift={(15,0)}]
+            \node[left, deepblue, font=\headerfont\footnotesize\bfseries] at (-0.5, 0.75) {VASO$\downarrow$};
+            \draw[thick, amber] (0,0) .. controls (0.2,0) and (0.4,1.5) .. (0.5,1.5) .. controls (0.6,1.5) and (0.7,0.2) .. (0.8,0.2) .. controls (0.9,0.5) and (1.5,0) .. (2,0)
+                                 (2,0) .. controls (2.2,0) and (2.4,1.5) .. (2.5,1.5) .. controls (2.6,1.5) and (2.7,0.2) .. (2.8,0.2) .. controls (2.9,0.5) and (3.5,0) .. (4,0);
+        \end{scope}
+    \end{tikzpicture}
+\end{minipage}
+
+\vspace{0.5cm}
+
+% --- RODAPÉ ---
+\noindent
+\colorblock{deepblue}{slate200}{%
+    {\headerfont\small\MakeUppercase{Sumário}} {\footnotesize\color{white}$\cdot$ Sempre correlacione a onda com o pulso. Em dúvida, gasometria arterial (SaO\textsubscript{2}) é o padrão-ouro.} \hfill {\headerfont\footnotesize\color{amber}CRITICAL CARE SERIES $\cdot$ 2025}
+}
+
+\end{minipage}% end content minipage
+
+\end{document}

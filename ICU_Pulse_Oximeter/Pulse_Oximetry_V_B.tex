@@ -1,0 +1,239 @@
+\documentclass[10pt]{article}
+\usepackage[paperwidth=42cm, paperheight=29.7cm, margin=0pt]{geometry}
+\usepackage{fontspec}
+\usepackage{microtype}
+\usepackage[brazil]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usetikzlibrary{calc, positioning, arrows.meta, shapes.geometric, decorations.pathreplacing, fit, backgrounds}
+
+% === TIPOGRAFIA (Dark Academic) ===
+\setmainfont{Athelas}[Ligatures=TeX]
+\setsansfont{Avenir Next}
+\newfontfamily\headerfont{Avenir Next}[LetterSpace=6]
+\newfontfamily\titlefont{Avenir Next Condensed}[LetterSpace=10]
+
+% === PALETA DARK ===
+\definecolor{darkbg}{RGB}{15, 23, 42}       % Slate 900
+\definecolor{cardbg}{RGB}{30, 41, 59}       % Slate 800
+\definecolor{cardborder}{RGB}{51, 65, 85}   % Slate 700
+\definecolor{lighttext}{RGB}{226, 232, 240} % Slate 200
+\definecolor{dimtext}{RGB}{148, 163, 184}   % Slate 400
+\definecolor{cyan}{RGB}{6, 182, 212}        % Ciano acento
+\definecolor{rose}{RGB}{244, 63, 94}        % Rosa acento
+\definecolor{amber}{RGB}{245, 158, 11}      % Amber acento
+\definecolor{emerald}{RGB}{16, 185, 129}    % Emerald acento
+
+\usepackage{xcolor}
+\pagecolor{darkbg}
+\color{lighttext}
+\pagestyle{empty}
+
+% === MACROS DE CAIXA DARK ===
+\newcommand{\darkbox}[3]{% {acento}{título}{conteúdo}
+    \begin{tikzpicture}
+        \node[rectangle, rounded corners=6pt, fill=cardbg, draw=cardborder,
+              line width=0.6pt, inner sep=14pt,
+              text width=\linewidth-28pt, align=left] (box) {%
+            {\headerfont\normalsize\color{#1}\MakeUppercase{#2}}\\[6pt]
+            {\small\color{lighttext}#3}
+        };
+        % Acento lateral
+        \fill[#1, rounded corners=2pt] ([xshift=-0.5pt]box.north west) rectangle ([xshift=3pt, yshift=0pt]box.south west);
+    \end{tikzpicture}\par\vspace{0.4cm}
+}
+
+\newcommand{\titem}[1]{%
+    \noindent\hangindent=1.5em\hangafter=1%
+    {\color{cyan}\footnotesize$\blacktriangleright$}\hspace{0.5em}#1\par\vspace{3pt}%
+}
+
+\begin{document}
+
+% === FUNDO COM GRID (overlay) ===
+\begin{tikzpicture}[remember picture, overlay]
+    % Grid sutil
+    \foreach \x in {0,1,...,42} {
+        \draw[cardborder!15] (\x, 0) -- (\x, -29.7);
+    }
+    \foreach \y in {0,-1,...,-29.7} {
+        \draw[cardborder!15] (0, \y) -- (42, \y);
+    }
+\end{tikzpicture}
+
+% ==================================================================
+% HEADER
+% ==================================================================
+\noindent
+\begin{tikzpicture}[remember picture, overlay]
+    \fill[cardbg] (current page.north west) rectangle ([yshift=-4cm]current page.north east);
+    \fill[cyan] ([yshift=-4cm]current page.north west) rectangle ([yshift=-4.15cm]current page.north east);
+\end{tikzpicture}
+
+\noindent
+\begin{minipage}[c][\dimexpr4cm\relax][c]{\textwidth}
+    \hspace{2.5cm}%
+    \begin{minipage}[c]{0.65\textwidth}
+        {\titlefont\fontsize{40}{44}\selectfont\color{white}\MakeUppercase{Oximetria de Pulso}}\\[4pt]
+        {\headerfont\color{dimtext}Monitorização Contínua e Não-Invasiva da Saturação Arterial}
+    \end{minipage}\hfill
+    \begin{minipage}[c]{0.25\textwidth}
+        \begin{flushright}
+            {\headerfont\color{cyan}\Large ONE PAGER ICU}\\[3pt]
+            {\small\color{dimtext}\textit{Nick Mark, MD}}\\[1pt]
+            {\footnotesize\color{cardborder}onepagericu.com}
+        \end{flushright}
+    \end{minipage}%
+    \hspace{2.5cm}
+\end{minipage}
+
+\vspace{1cm}
+
+% ==================================================================
+% CORPO PRINCIPAL
+% ==================================================================
+\noindent\hspace{2.5cm}%
+\begin{minipage}[t]{\dimexpr\textwidth-5cm\relax}
+
+% --- PRINCÍPIO ---
+\darkbox{cyan}{Princípio Fisiológico}{%
+    A oximetria de pulso constitui a medição contínua da saturação de O\textsubscript{2} da hemoglobina por espectrofotometria. O sensor emite luz \textbf{\color{rose}vermelha} (660\,nm) e \textbf{\color{amber}infravermelha} (940\,nm) através do leito capilar. A absorção diferencial entre hemoglobina \textbf{oxigenada} (OxyHb) e \textbf{desoxigenada} (DeoxyHb) é analisada usando o componente pulsátil (AC) do sinal.
+}
+
+\vspace{0.2cm}
+
+% --- 2 COLUNAS: SENSOR + GRÁFICO ---
+\noindent
+\begin{minipage}[t]{0.48\textwidth}
+    \darkbox{amber}{Mecânica do Sensor}{%
+        \begin{center}
+        \begin{tikzpicture}[scale=1.0, font=\sffamily\small]
+            \draw[thick, dimtext, fill=cardbg!50] (-2.2, -0.7) .. controls (1, -0.7) and (1.5, -0.5) .. (1.8, 0) .. controls (1.5, 0.5) and (1, 0.7) .. (-2.2, 0.7);
+            \draw[cardborder] (0.8, 0.5) .. controls (1.5, 0.5) and (1.8, 0.3) .. (1.8, 0) .. controls (1.8, -0.3) and (1.5, -0.5) .. (0.8, -0.5);
+            \fill[cardborder] (-0.8, 1.0) rectangle (1.0, 1.35);
+            \fill[cardborder] (-0.8, -1.0) rectangle (1.0, -1.35);
+            \node[lighttext, font=\tiny\headerfont] at (0.1, 1.17) {LED};
+            \node[lighttext, font=\tiny\headerfont] at (0.1, -1.17) {SENSOR};
+            \draw[dashed, rose, -Latex, thick] (0.0, 0.95) -- (0.0, -0.95);
+            \draw[dashed, amber, -Latex, thick] (0.4, 0.95) -- (0.4, -0.95);
+            \node[right, rose, font=\tiny] at (0.0, 0.5) {660nm};
+            \node[right, amber, font=\tiny] at (0.4, -0.5) {940nm};
+        \end{tikzpicture}
+        \end{center}
+        O componente \textbf{AC} (pulsátil) isola sangue arterial.\\
+        O componente \textbf{DC} (constante) filtra tecidos e sangue venoso.
+    }
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\textwidth}
+    \darkbox{emerald}{Espectro de Absorção}{%
+        \begin{center}
+        \begin{tikzpicture}[scale=0.80, font=\sffamily\small]
+            \draw[->, dimtext] (0,0) -- (6.2,0) node[right, scale=0.7, lighttext] {nm};
+            \draw[->, dimtext] (0,0) -- (0,4.2) node[above, scale=0.7, lighttext] {Abs};
+            \draw[ultra thick, cyan] (0, 3.5) .. controls (2, 2.8) and (3, 2) .. (5.5, 1) node[right, scale=0.7] {\textbf{OxyHb}};
+            \draw[ultra thick, rose] (0, 1) .. controls (1, 2) and (2, 3) .. (3, 3) .. controls (4, 3) and (5, 2.2) .. (5.5, 2.2) node[right, scale=0.7] {\textbf{DeoxyHb}};
+            \draw[dotted, rose!50, thick] (0.8, 0) -- (0.8, 4) node[above, scale=0.6, rose] {\textbf{RED}};
+            \draw[dotted, amber!50, thick] (4.8, 0) -- (4.8, 4) node[above, scale=0.6, amber] {\textbf{IR}};
+        \end{tikzpicture}
+        \end{center}
+    }
+\end{minipage}
+
+\vspace{0.1cm}
+
+% --- 4 COLUNAS: FATORES ---
+\noindent
+\begin{minipage}[t]{0.24\textwidth}
+    \darkbox{rose}{Pigmentação e Esmalte}{%
+        \titem{SpO\textsubscript{2} pode \textbf{superestimar} em pele negra --- hipoxemia oculta.}
+        \titem{Pacientes negros: \textbf{3$\times$} mais risco.}
+        \titem{Esmaltes escuros (azul, preto) interferem.}
+    }
+\end{minipage}\hfill
+\begin{minipage}[t]{0.24\textwidth}
+    \darkbox{cyan}{Hemoglobinas Anormais}{%
+        \titem{\textbf{CoHb:} Falsamente normal.}
+        \titem{\textbf{MetHb:} Trava em $\sim$85\%.}
+        \titem{\textbf{SulfaHb:} Falsa baixa.}
+        \titem{Co-oximetria (4+ $\lambda$) resolve.}
+    }
+\end{minipage}\hfill
+\begin{minipage}[t]{0.24\textwidth}
+    \darkbox{amber}{Baixo Fluxo e Lag}{%
+        \titem{Choque reduz sinal pulsátil.}
+        \titem{ECMO/LVAD: inútil.}
+        \titem{\textbf{Lag:} 5--15s periférico.}
+        \titem{Precisão cai $<$75\%.}
+    }
+\end{minipage}\hfill
+\begin{minipage}[t]{0.24\textwidth}
+    \darkbox{emerald}{Corantes e Hiperóxia}{%
+        \titem{Azul de metileno: falsa queda.}
+        \titem{Hiperóxia não detectada quando SpO\textsubscript{2} = 100\%.}
+        \titem{Alvo: SpO\textsubscript{2} $\geq$ 94\%.}
+    }
+\end{minipage}
+
+\vspace{0.1cm}
+
+% --- ONDAS ---
+\noindent
+\begin{minipage}[t]{0.30\textwidth}
+    \darkbox{cyan}{Onda Pletismográfica}{%
+        Componentes \textit{sistólico} e \textit{diastólico} refletem tônus vascular e compliance arterial.\\[4pt]
+        \begin{center}
+        \begin{tikzpicture}[scale=0.75]
+            \fill[cyan!10] (0,0) .. controls (0.2,0) and (0.6,2.2) .. (0.8,2.2) .. controls (1.0,2.2) and (1.2,1) .. (1.5,1) .. controls (1.8,1.4) and (2.5,0) .. (3,0) -- cycle;
+            \draw[thick, cyan] (0,0) .. controls (0.2,0) and (0.6,2.2) .. (0.8,2.2) .. controls (1.0,2.2) and (1.2,1) .. (1.5,1) .. controls (1.8,1.4) and (2.5,0) .. (3,0);
+            \node[above, cyan, font=\headerfont\tiny] at (0.8, 2.2) {SÍSTOLE};
+            \node[right, dimtext, font=\tiny] at (1.5, 1) {Dicrótico};
+            \draw[dashed, dimtext!40] (0.8,0) -- (0.8,2.2);
+            \draw[dashed, dimtext!40] (1.5,0) -- (1.5,1);
+        \end{tikzpicture}
+        \end{center}
+    }
+\end{minipage}\hfill
+\begin{minipage}[t]{0.66\textwidth}
+    \begin{tikzpicture}
+        \node[rectangle, rounded corners=6pt, fill=cardbg, draw=cardborder, line width=0.6pt,
+              inner sep=14pt, text width=\linewidth-28pt, align=left] (box) {%
+            {\headerfont\normalsize\color{cyan}\MakeUppercase{Padrões de Onda}}\\[10pt]
+            \begin{tikzpicture}[scale=0.55, font=\headerfont\scriptsize]
+                \node[left, cyan, font=\headerfont\footnotesize\bfseries] at (-0.5, 0.5) {NORMAL};
+                \draw[thick, cyan] (0,0) .. controls (0.2,0) and (0.4,1) .. (0.5,1) .. controls (0.6,1) and (0.7,0.4) .. (0.8,0.4) .. controls (0.9,0.8) and (1.5,0) .. (2,0)
+                                    (2,0) .. controls (2.2,0) and (2.4,1) .. (2.5,1) .. controls (2.6,1) and (2.7,0.4) .. (2.8,0.4) .. controls (2.9,0.8) and (3.5,0) .. (4,0);
+                \begin{scope}[shift={(6,0)}]
+                    \node[left, dimtext, font=\headerfont\footnotesize\bfseries] at (-0.5, 0.15) {FRACO};
+                    \draw[thick, dimtext] (0,0) .. controls (0.2,0) and (0.4,0.3) .. (0.5,0.3) .. controls (0.6,0.3) and (0.7,0.1) .. (0.8,0.1) .. controls (0.9,0.2) and (1.5,0) .. (2,0)
+                                           (2,0) .. controls (2.2,0) and (2.4,0.3) .. (2.5,0.3) .. controls (2.6,0.3) and (2.7,0.1) .. (2.8,0.1) .. controls (2.9,0.2) and (3.5,0) .. (4,0);
+                \end{scope}
+                \begin{scope}[shift={(12,0)}]
+                    \node[left, rose, font=\headerfont\footnotesize\bfseries] at (-0.5, 0.5) {VASOCONSTR.};
+                    \draw[thick, rose] (0,0) .. controls (0.2,0) and (0.4,1) .. (0.5,1) .. controls (0.6,1) and (0.7,0.7) .. (0.8,0.7) .. controls (0.9,0.9) and (1.5,0) .. (2,0)
+                                        (2,0) .. controls (2.2,0) and (2.4,1) .. (2.5,1) .. controls (2.6,1) and (2.7,0.7) .. (2.8,0.7) .. controls (2.9,0.9) and (3.5,0) .. (4,0);
+                \end{scope}
+                \begin{scope}[shift={(18,0)}]
+                    \node[left, amber, font=\headerfont\footnotesize\bfseries] at (-0.5, 0.75) {VASODILAT.};
+                    \draw[thick, amber] (0,0) .. controls (0.2,0) and (0.4,1.5) .. (0.5,1.5) .. controls (0.6,1.5) and (0.7,0.2) .. (0.8,0.2) .. controls (0.9,0.5) and (1.5,0) .. (2,0)
+                                         (2,0) .. controls (2.2,0) and (2.4,1.5) .. (2.5,1.5) .. controls (2.6,1.5) and (2.7,0.2) .. (2.8,0.2) .. controls (2.9,0.5) and (3.5,0) .. (4,0);
+                \end{scope}
+            \end{tikzpicture}
+        };
+        \fill[cyan, rounded corners=2pt] ([xshift=-0.5pt]box.north west) rectangle ([xshift=3pt]box.south west);
+    \end{tikzpicture}\par
+\end{minipage}
+
+\vspace{0.4cm}
+
+% --- RODAPÉ ---
+\noindent
+\begin{tikzpicture}
+    \node[rectangle, fill=cardbg, inner sep=10pt, text width=\linewidth-20pt, align=left] {%
+        {\headerfont\small\color{cyan}\MakeUppercase{Sumário}} {\small\color{dimtext}$\cdot$ Correlacione a onda com o pulso palpável. Em dúvida, gasometria arterial (SaO\textsubscript{2}) é o padrão-ouro.} \hfill {\headerfont\footnotesize\color{amber}CRITICAL CARE $\cdot$ 2025}
+    };
+\end{tikzpicture}
+
+\end{minipage}
+
+\end{document}

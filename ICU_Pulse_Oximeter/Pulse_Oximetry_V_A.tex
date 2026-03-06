@@ -1,0 +1,241 @@
+\documentclass[10pt]{article}
+\usepackage[paperwidth=42cm, paperheight=29.7cm, margin=2cm, top=1.8cm, bottom=1.5cm]{geometry}
+\usepackage{fontspec}
+\usepackage{microtype} % Kerning, ligatures, optical margin alignment
+\usepackage[brazil]{babel}
+\usepackage{multicol}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usetikzlibrary{calc, positioning, arrows.meta, shapes.geometric, decorations.pathreplacing}
+
+% === TIPOGRAFIA (NEJM Editorial) ===
+\setmainfont{Palatino}[Ligatures=TeX]
+\setsansfont{Optima}
+\newfontfamily\headerfont{Optima}[LetterSpace=3]
+\newfontfamily\titlefont{Optima}[LetterSpace=8]
+
+% === PALETA SÓBRIA ===
+\definecolor{navy}{RGB}{26, 54, 93}        % Azul-marinho profundo
+\definecolor{darktext}{RGB}{20, 20, 20}     % Quase preto
+\definecolor{midgrey}{RGB}{120, 120, 120}   % Cinza médio
+\definecolor{lightgrey}{RGB}{235, 235, 235} % Separadores
+\definecolor{rulered}{RGB}{153, 27, 27}     % Acento vermelho sóbrio
+\definecolor{ruleblue}{RGB}{30, 64, 175}    % Acento azul
+
+\usepackage{xcolor}
+\color{darktext}
+
+\pagestyle{empty}
+\setlength{\columnsep}{1.2cm}
+\setlength{\columnseprule}{0.4pt}
+
+% === MACROS TIPOGRÁFICAS ===
+\newcommand{\sectiontitle}[1]{%
+    \vspace{0.6cm}%
+    {\headerfont\large\bfseries\textcolor{navy}{\addfontfeatures{LetterSpace=5}\MakeUppercase{#1}}}\\[2pt]%
+    {\color{navy}\rule{3cm}{1.2pt}}\\[6pt]%
+}
+
+\newcommand{\titem}[1]{%
+    \noindent\hangindent=1.5em\hangafter=1%
+    {\textcolor{navy}{\small$\blacktriangleright$}}\hspace{0.5em}#1\par\vspace{3pt}%
+}
+
+\begin{document}
+\begin{center}
+\scalebox{0.82}{%
+\begin{minipage}{\textwidth}
+
+% ==================================================================
+% CABEÇALHO ESTILO JOURNAL
+% ==================================================================
+\noindent
+\begin{minipage}[b]{0.65\textwidth}
+    {\titlefont\fontsize{38}{42}\selectfont\textcolor{navy}{\MakeUppercase{Oximetria de Pulso}}}\\[6pt]
+    {\headerfont\large\textcolor{midgrey}{Monitorização Contínua e Não-Invasiva da Saturação Arterial de Oxigênio}}
+\end{minipage}\hfill
+\begin{minipage}[b]{0.30\textwidth}
+    \begin{flushright}
+        {\headerfont\small\textcolor{midgrey}{ONE PAGER $\cdot$ ICU CRITICAL CARE}}\\[3pt]
+        {\small\textit{Nick Mark, MD} $\cdot$ \textit{Tradução Profissional}}\\[2pt]
+        {\footnotesize\textcolor{midgrey}{onepagericu.com}}
+    \end{flushright}
+\end{minipage}
+
+\vspace{4pt}
+{\color{navy}\rule{\textwidth}{2pt}}
+\vspace{2pt}
+{\color{lightgrey}\rule{\textwidth}{0.4pt}}
+
+\vspace{0.5cm}
+
+% ==================================================================
+% BLOCO INTRODUTÓRIO (antes das colunas)
+% ==================================================================
+\noindent
+\begin{minipage}[t]{0.55\textwidth}
+    {\headerfont\normalsize\textcolor{navy}{\addfontfeatures{LetterSpace=4}PRINCÍPIO FISIOLÓGICO}}\\[4pt]
+    A oximetria de pulso constitui a medição contínua da saturação de oxigênio da hemoglobina por espectrofotometria.
+    O dispositivo explora o fato de que a hemoglobina \textbf{oxigenada} (OxyHb) e a \textbf{desoxigenada} (DeoxyHb)
+    absorvem luz vermelha (660\,nm) e infravermelha (940\,nm) de forma diferente.
+    O componente \textit{pulsátil} (AC) do sinal isola a absorção arterial da absorção dos tecidos (DC).
+\end{minipage}\hfill
+\begin{minipage}[t]{0.40\textwidth}
+    \centering
+    % GRÁFICO DE ABSORÇÃO (compacto, dentro do header)
+    \begin{tikzpicture}[scale=0.72, font=\sffamily\small]
+        \draw[->, darktext!60] (0,0) -- (6.2,0) node[right, scale=0.7] {nm};
+        \draw[->, darktext!60] (0,0) -- (0,4.2) node[above, scale=0.7] {Absorção};
+
+        % Curvas
+        \draw[ultra thick, ruleblue!80] (0, 3.5) .. controls (2, 2.8) and (3, 2) .. (5.5, 1)
+            node[right, scale=0.7, ruleblue] {\textbf{OxyHb}};
+        \draw[ultra thick, rulered!80] (0, 1) .. controls (1, 2) and (2, 3) .. (3, 3)
+            .. controls (4, 3) and (5, 2.2) .. (5.5, 2.2)
+            node[right, scale=0.7, rulered] {\textbf{DeoxyHb}};
+
+        % Linhas de referência
+        \draw[dotted, navy, thick] (0.8, 0) -- (0.8, 4) node[above, scale=0.6] {\textbf{660}};
+        \draw[dotted, navy, thick] (4.8, 0) -- (4.8, 4) node[above, scale=0.6] {\textbf{940}};
+    \end{tikzpicture}
+\end{minipage}
+
+\vspace{0.5cm}
+
+% ==================================================================
+% CONTEÚDO PRINCIPAL EM 3 COLUNAS
+% ==================================================================
+\begin{multicols}{3}
+
+\sectiontitle{Sensor e Posicionamento}
+
+O sensor emite luz que atravessa o leito capilar pulsátil. O fotodetector oposto mede a intensidade residual.
+
+\titem{\textbf{Dedo} --- o mais preciso. Usa transmissão direta. O polegar pode ser marginalmente superior.}
+\titem{\textbf{Orelha e Testa} --- usam reflexão. Podem ser mais confiáveis em vasoconstrição ou hipotermia.}
+\titem{Nenhum local é universalmente superior. Tente vários para identificar o melhor sinal no paciente.}
+
+\sectiontitle{Cor da Pele e Esmalte}
+
+A melanina absorve luz de forma diferente, podendo causar \textbf{superestimação} da SpO\textsubscript{2} real em pacientes de pele negra --- especialmente em hipoxemia.
+
+\titem{Pacientes negros têm \textbf{3$\times$ mais risco} de hipoxemia oculta (SpO\textsubscript{2} aparentemente normal com SaO\textsubscript{2} real baixa).}
+\titem{Esmaltes escuros (azul, verde, preto) interferem significativamente na leitura.}
+
+\sectiontitle{Estados de Baixo Fluxo}
+
+Choque, vasoconstrição severa e suporte circulatório mecânico (ECMO, LVAD) reduzem ou eliminam o componente pulsátil do sinal.
+
+\titem{Fluxo \textit{não-pulsátil} torna a oximetria convencional inútil.}
+\titem{A amplitude da onda pletismográfica correlaciona-se com a perfusão periférica.}
+
+\sectiontitle{Hemoglobinas Anormais}
+
+\titem{\textbf{Carboxi-Hb (CO):} Leitura falsamente \textit{normal} (90--100\%). O sensor não distingue CO de O\textsubscript{2}. Suspeitar em incêndios.}
+\titem{\textbf{Meta-Hb:} Leitura ``travada'' em $\sim$85\% independente do valor real.}
+\titem{\textbf{Sulfa-Hb:} Leitura espúria baixa. Paciente pode não estar hipóxico.}
+\titem{\textbf{HbA1c $>$ 7:} Leve superestimativa da SpO\textsubscript{2}.}
+
+A \textbf{co-oximetria de pulso} (4+ comprimentos de onda) pode medir MetHb e CoHb diretamente.
+
+\sectiontitle{Precisão em Baixa SpO\textsubscript{2}}
+
+A curva de calibração foi derivada de voluntários saudáveis. Abaixo de SpO\textsubscript{2} $<$ 75\%, a correlação com a SaO\textsubscript{2} real deteriora-se significativamente.
+
+\sectiontitle{Hiperoxemia}
+
+Hiperóxia é prejudicial (especialmente pós-parada cardíaca), mas a oximetria não diferencia PaO\textsubscript{2} normal de supra-normal quando SpO\textsubscript{2} = 100\%.
+
+\titem{Alvo razoável: SpO\textsubscript{2} $\geq$ 94\% (evitar tanto hipóxia quanto hiperóxia).}
+
+\sectiontitle{Atraso na Leitura}
+
+A medição periférica reflete o estado \textbf{5--15 segundos no passado}. O atraso é maior em hipotensão e menor com probes centrais (testa/orelha).
+
+\titem{A SpO\textsubscript{2} exibida pode continuar caindo mesmo \textit{após} intubação correta.}
+
+\sectiontitle{Corantes e Medicamentos}
+
+Azul de metileno e indocianina causam \textbf{quedas falsas transitórias} da SpO\textsubscript{2}.
+
+\vspace{0.3cm}
+{\color{navy}\rule{\linewidth}{1.2pt}}
+\vspace{0.3cm}
+
+\sectiontitle{Análise da Onda Pletismográfica}
+
+A onda possui componentes \textit{sistólicos} e \textit{diastólicos}. Sua morfologia fornece informações sobre o tônus vascular.
+
+\vspace{0.2cm}
+\begin{center}
+\begin{tikzpicture}[scale=0.85, font=\sffamily\footnotesize]
+    \fill[lightgrey!60] (0,0) .. controls (0.2,0) and (0.6,2.2) .. (0.8,2.2)
+        .. controls (1.0,2.2) and (1.2,1) .. (1.5,1)
+        .. controls (1.8,1.4) and (2.5,0) .. (3,0) -- cycle;
+    \draw[thick, navy] (0,0) .. controls (0.2,0) and (0.6,2.2) .. (0.8,2.2)
+        .. controls (1.0,2.2) and (1.2,1) .. (1.5,1)
+        .. controls (1.8,1.4) and (2.5,0) .. (3,0);
+    \node[above, navy, scale=0.8, font=\headerfont\bfseries] at (0.8, 2.2) {Sístole};
+    \node[right, midgrey, scale=0.75, font=\headerfont] at (1.5, 1) {Nó Dicrótico};
+    \draw[dashed, midgrey!60] (0.8,0) -- (0.8,2.2);
+    \draw[dashed, midgrey!60] (1.5,0) -- (1.5,1);
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.1cm}
+
+{\headerfont\small\textcolor{navy}{NORMAL}}\\[3pt]
+\begin{tikzpicture}[scale=0.55]
+    \draw[thick, navy] (0, 0) .. controls (0.2, 0) and (0.4, 1) .. (0.5, 1) .. controls (0.6, 1) and (0.7, 0.4) .. (0.8, 0.4) .. controls (0.9, 0.8) and (1.5, 0) .. (2, 0);
+    \draw[thick, navy] (2, 0) .. controls (2.2, 0) and (2.4, 1) .. (2.5, 1) .. controls (2.6, 1) and (2.7, 0.4) .. (2.8, 0.4) .. controls (2.9, 0.8) and (3.5, 0) .. (4, 0);
+\end{tikzpicture}
+
+\vspace{0.15cm}
+
+{\headerfont\small\textcolor{navy}{SINAL FRACO}} {\footnotesize\textcolor{midgrey}{--- $\downarrow$ perfusão}}\\[3pt]
+\begin{tikzpicture}[scale=0.55]
+    \draw[thick, midgrey] (0, 0) .. controls (0.2, 0) and (0.4, 0.3) .. (0.5, 0.3) .. controls (0.6, 0.3) and (0.7, 0.1) .. (0.8, 0.1) .. controls (0.9, 0.2) and (1.5, 0) .. (2, 0);
+    \draw[thick, midgrey] (2, 0) .. controls (2.2, 0) and (2.4, 0.3) .. (2.5, 0.3) .. controls (2.6, 0.3) and (2.7, 0.1) .. (2.8, 0.1) .. controls (2.9, 0.2) and (3.5, 0) .. (4, 0);
+\end{tikzpicture}
+
+\vspace{0.15cm}
+
+{\headerfont\small\textcolor{navy}{VASOCONSTRIÇÃO}} {\footnotesize\textcolor{midgrey}{--- $\uparrow$ dicrótico}}\\[3pt]
+\begin{tikzpicture}[scale=0.55]
+    \draw[thick, rulered!70] (0, 0) .. controls (0.2, 0) and (0.4, 1) .. (0.5, 1) .. controls (0.6, 1) and (0.7, 0.7) .. (0.8, 0.7) .. controls (0.9, 0.9) and (1.5, 0) .. (2, 0);
+    \draw[thick, rulered!70] (2, 0) .. controls (2.2, 0) and (2.4, 1) .. (2.5, 1) .. controls (2.6, 1) and (2.7, 0.7) .. (2.8, 0.7) .. controls (2.9, 0.9) and (3.5, 0) .. (4, 0);
+\end{tikzpicture}
+
+\vspace{0.15cm}
+
+{\headerfont\small\textcolor{navy}{VASODILATAÇÃO}} {\footnotesize\textcolor{midgrey}{--- $\uparrow$ sistólico}}\\[3pt]
+\begin{tikzpicture}[scale=0.55]
+    \draw[thick, ruleblue!70] (0, 0) .. controls (0.2, 0) and (0.4, 1.5) .. (0.5, 1.5) .. controls (0.6, 1.5) and (0.7, 0.2) .. (0.8, 0.2) .. controls (0.9, 0.5) and (1.5, 0) .. (2, 0);
+    \draw[thick, ruleblue!70] (2, 0) .. controls (2.2, 0) and (2.4, 1.5) .. (2.5, 1.5) .. controls (2.6, 1.5) and (2.7, 0.2) .. (2.8, 0.2) .. controls (2.9, 0.5) and (3.5, 0) .. (4, 0);
+\end{tikzpicture}
+
+\vspace{0.4cm}
+
+{\color{navy}\rule{\linewidth}{1.2pt}}
+\vspace{0.2cm}
+
+{\headerfont\small\textcolor{navy}{\addfontfeatures{LetterSpace=4}SUMÁRIO CLÍNICO}}\\[4pt]
+{\small Sempre correlacione a onda pletismográfica com o pulso palpável.
+Em dúvida (pele escura, intoxicação por CO, choque), a \textbf{gasometria arterial (SaO\textsubscript{2})} permanece o padrão-ouro.}
+
+\end{multicols}
+
+% ==================================================================
+% RODAPÉ
+% ==================================================================
+\vfill
+\noindent
+{\color{lightgrey}\rule{\textwidth}{0.4pt}}\\[3pt]
+\noindent
+{\footnotesize\textcolor{midgrey}{\headerfont CRITICAL CARE TECHNICAL SERIES} \hfill \textit{Material exclusivamente educacional.} \hfill \headerfont\textcolor{midgrey}{PALS\,/\,ICU\,/\,2025}}
+
+\end{minipage}%
+}
+\end{center}
+\end{document}
