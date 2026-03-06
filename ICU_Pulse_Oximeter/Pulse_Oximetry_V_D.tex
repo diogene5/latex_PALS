@@ -1,0 +1,466 @@
+% =============================================================================
+% OXIMETRIA DE PULSO — ONE PAGER ICU
+% Versão funcional: cartão de referência rápida para beira-leito
+% Estilo: denso, color-coded, prático (inspirado em cartões de emergência)
+% Nick Mark MD — Tradução
+% =============================================================================
+\documentclass[landscape,a3paper]{article}
+\usepackage[landscape,a3paper,margin=6mm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazilian]{babel}
+\usepackage{lmodern}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage{colortbl}
+\usepackage{booktabs}
+\usepackage{multicol}
+\usepackage{array}
+\usepackage{calc}
+\usepackage{tikz}
+\usepackage{amsmath}
+\usetikzlibrary{arrows.meta}
+
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+
+% ---------------------------------------------------------------------------
+% CORES
+% ---------------------------------------------------------------------------
+\definecolor{titleBar}{RGB}{20, 40, 70}
+\definecolor{physRed}{RGB}{165, 30, 35}
+\definecolor{physLight}{RGB}{252, 228, 230}
+\definecolor{sensorBlue}{RGB}{25, 80, 150}
+\definecolor{sensorLight}{RGB}{215, 230, 248}
+\definecolor{precGreen}{RGB}{30, 110, 55}
+\definecolor{precLight}{RGB}{218, 242, 225}
+\definecolor{hemPurple}{RGB}{90, 40, 130}
+\definecolor{hemLight}{RGB}{235, 220, 248}
+\definecolor{warnOrange}{RGB}{200, 120, 0}
+\definecolor{warnYellow}{RGB}{255, 243, 200}
+\definecolor{waveBlue}{RGB}{10, 90, 170}
+\definecolor{waveLight}{RGB}{220, 235, 250}
+\definecolor{stepGray}{RGB}{90, 90, 90}
+\definecolor{zebraA}{RGB}{255, 255, 255}
+\definecolor{zebraB}{RGB}{240, 245, 252}
+\definecolor{oxyBlue}{RGB}{2, 132, 199}
+\definecolor{deoxyRed}{RGB}{180, 30, 30}
+\definecolor{irOrange}{RGB}{210, 140, 20}
+
+% ---------------------------------------------------------------------------
+% COMANDOS
+% ---------------------------------------------------------------------------
+
+% Cabeçalho de seção (barra colorida)
+\newcommand{\secbar}[2]{%
+  \par\vspace{3pt}%
+  \noindent\colorbox{#1}{\parbox{\dimexpr\linewidth-4pt}{%
+    \centering\footnotesize\bfseries\strut\textcolor{white}{#2}\strut%
+  }}%
+  \par\vspace{2pt}%
+}
+
+% Caixa de conteúdo
+\newcommand{\infocard}[4]{%
+  % #1=cor acento, #2=título, #3=conteúdo, #4=alerta (pode ser vazio)
+  \par\vspace{2pt}%
+  \noindent\fcolorbox{#1!70!black}{#1!6!white}{\parbox{\dimexpr\linewidth-6pt}{%
+    \noindent\colorbox{#1}{\parbox{\dimexpr\linewidth-2pt}{%
+      \scriptsize\bfseries\color{white}\strut\ #2\strut%
+    }}\\[2pt]%
+    \scriptsize%
+    #3%
+    \ifx&#4&\else\\[2pt]\noindent\colorbox{warnYellow}{\parbox{\dimexpr\linewidth-6pt}{\scriptsize\textcolor{warnOrange}{\bfseries !}\ #4}}\fi%
+  }}%
+  \par%
+}
+
+% Ponto-chave com bullet
+\newcommand{\kp}[1]{{\color{stepGray}\bfseries\guillemotright}\hspace{0.4em}#1\par\vspace{1.5pt}}
+
+% Valor de SpO2 em destaque
+\newcommand{\spo}[1]{\textbf{\textcolor{oxyBlue}{#1}}}
+
+\begin{document}
+
+% === TITLE BAR ===
+\noindent\colorbox{titleBar}{\parbox{\dimexpr\textwidth-4pt}{%
+  \centering\vspace{2pt}%
+  {\color{white}\bfseries\Large OXIMETRIA DE PULSO}%
+  \quad{\color{white}\footnotesize\textbar\quad Princípios, Precisão e Análise da Onda Pletismográfica}%
+  \hfill{\color{white!70}\scriptsize One Pager ICU $\bullet$ Nick Mark MD $\bullet$ Tradução}%
+  \vspace{2pt}%
+}}
+
+\vspace{2pt}
+
+% === LEGENDA ===
+\noindent\colorbox{sensorLight}{\parbox{\dimexpr\textwidth-4pt}{%
+  \centering\scriptsize%
+  \textbf{Como ler este cartão:}
+  \textcolor{physRed}{$\blacksquare$}\,Princípio
+  \quad\textcolor{sensorBlue}{$\blacksquare$}\,Sensor/Técnica
+  \quad\textcolor{precGreen}{$\blacksquare$}\,Fatores de Precisão
+  \quad\textcolor{hemPurple}{$\blacksquare$}\,Hemoglobinas\,\&\,Interferências
+  \quad\textcolor{waveBlue}{$\blacksquare$}\,Onda Pletismográfica
+  \quad\textcolor{warnOrange}{$\blacksquare$}\,Alertas
+}}
+
+\vspace{3pt}
+
+\setlength{\columnsep}{6pt}
+\setlength{\columnseprule}{0.3pt}
+\renewcommand{\columnseprulecolor}{\color{gray!40}}
+
+\begin{multicols}{4}
+\scriptsize
+\setlength{\tabcolsep}{2pt}
+\renewcommand{\arraystretch}{1.1}
+
+% =====================================================================
+% COLUNA 1 — PRINCÍPIO E SENSOR
+% =====================================================================
+
+\secbar{physRed}{PRINCÍPIO FISIOLÓGICO}
+
+\infocard{physRed}{LEI DE BEER-LAMBERT}{%
+    A oximetria de pulso mede a \textbf{saturação de O\textsubscript{2} da hemoglobina} de forma contínua e não invasiva.\\[2pt]
+    Explora a \textbf{absorção diferencial} de luz entre:\\[1pt]
+    \kp{\textcolor{oxyBlue}{\textbf{OxyHb}} --- absorve mais \textcolor{irOrange}{IR (940\,nm)}}
+    \kp{\textcolor{deoxyRed}{\textbf{DeoxyHb}} --- absorve mais \textcolor{deoxyRed}{Red (660\,nm)}}
+    A razão \textbf{R = (AC/DC)\textsubscript{Red} / (AC/DC)\textsubscript{IR}} é convertida em SpO\textsubscript{2} usando uma \textbf{curva de calibração empírica}.
+}{}
+
+\infocard{physRed}{COMPONENTES DO SINAL}{%
+    \begin{tabular}{@{}>{\bfseries}l p{4.5cm}@{}}
+    \rowcolor{physLight}
+    AC (pulsátil) & Sangue \textbf{arterial} apenas. Varia com o ciclo cardíaco. \textbf{É isso que o oxímetro usa.} \\
+    DC (constante) & Tecidos, ossos, sangue venoso e capilar. Filtrado pelo algoritmo. \\
+    \end{tabular}
+}{}
+
+\vspace{2pt}
+
+% GRÁFICO: Curvas de Absorção
+\noindent\fcolorbox{physRed!70!black}{physRed!6!white}{\parbox{\dimexpr\linewidth-6pt}{%
+  \noindent\colorbox{physRed}{\parbox{\dimexpr\linewidth-2pt}{%
+    \scriptsize\bfseries\color{white}\strut\ ESPECTRO DE ABSORÇÃO\strut%
+  }}\\[3pt]%
+  \centering
+  \begin{tikzpicture}[scale=0.62, font=\sffamily\tiny]
+      \draw[->, stepGray] (0,0) -- (7,0) node[right] {$\lambda$ (nm)};
+      \draw[->, stepGray] (0,0) -- (0,4.5) node[above] {Absorção};
+
+      % Ticks
+      \foreach \x/\t in {0.5/600, 2/700, 3.5/800, 5/900, 6.5/1000} {
+          \draw[stepGray] (\x, 0) -- (\x, -0.1) node[below, scale=0.9] {\t};
+      }
+
+      % Curvas
+      \draw[ultra thick, oxyBlue] (0.3, 4) .. controls (1.5, 3.5) and (2.5, 2.2) ..
+          (3.5, 2.2) .. controls (4.5, 2.2) and (5.5, 1.5) .. (6.5, 1.2);
+      \node[oxyBlue, right, scale=0.9] at (6.5, 1.2) {\textbf{OxyHb}};
+
+      \draw[ultra thick, deoxyRed] (0.3, 1) .. controls (1, 2) and (2, 3.5) ..
+          (3.5, 3.5) .. controls (5, 3.5) and (5.8, 2.5) .. (6.5, 2.5);
+      \node[deoxyRed, right, scale=0.9] at (6.5, 2.5) {\textbf{DeoxyHb}};
+
+      % Linhas de referência
+      \draw[dashed, deoxyRed!60, thick] (1.0, 0) -- (1.0, 4.3);
+      \node[above, deoxyRed, scale=0.85, font=\bfseries] at (1.0, 4.3) {660};
+
+      \draw[dashed, irOrange, thick] (5.5, 0) -- (5.5, 4.3);
+      \node[above, irOrange, scale=0.85, font=\bfseries] at (5.5, 4.3) {940};
+  \end{tikzpicture}
+  \par
+}}
+\par
+
+\vspace{2pt}
+
+\secbar{sensorBlue}{SENSOR E POSICIONAMENTO}
+
+\infocard{sensorBlue}{TIPOS DE SENSOR}{%
+    \begin{tabular}{@{}>{\bfseries}l p{4.0cm}@{}}
+    \rowcolor{sensorLight}
+    Transmissão & Dedo, pé (neonato). LED de um lado, detector do outro. \textbf{Mais preciso.} \\
+    Reflexão & Testa, orelha. LED e detector do mesmo lado. Útil quando não há acesso aos dedos. \\
+    \end{tabular}\\[2pt]
+    \kp{\textbf{Dedo} --- mais preciso. Polegar pode ser marginalmente superior.}
+    \kp{\textbf{Orelha\,\&\,Testa} --- mais rápidos e confiáveis em \textbf{vasoconstrição} e hipotermia.}
+    \kp{Nenhum local é \textit{sempre} superior --- teste vários.}
+}{Posicionar com LED sobre a unha. Evitar edema, curativos e luz ambiente direta.}
+
+% --- DIAGRAMA DO SENSOR (compacto) ---
+\noindent\fcolorbox{sensorBlue!70!black}{sensorBlue!6!white}{\parbox{\dimexpr\linewidth-6pt}{%
+  \noindent\colorbox{sensorBlue}{\parbox{\dimexpr\linewidth-2pt}{%
+    \scriptsize\bfseries\color{white}\strut\ SENSOR DE TRANSMISSÃO\strut%
+  }}\\[3pt]%
+  \centering
+  \begin{tikzpicture}[scale=0.9, font=\sffamily\tiny]
+      % Dedo
+      \draw[thick, stepGray!50, fill=sensorLight!30] (-2, -0.6) .. controls (1, -0.6) and (1.4, -0.4) .. (1.6, 0) .. controls (1.4, 0.4) and (1, 0.6) .. (-2, 0.6);
+      \draw[stepGray!30] (0.7, 0.4) .. controls (1.4, 0.4) and (1.6, 0.25) .. (1.6, 0) .. controls (1.6, -0.25) and (1.4, -0.4) .. (0.7, -0.4);
+
+      % Sensor clamp
+      \fill[sensorBlue!80] (-0.6, 0.9) rectangle (0.8, 1.15);
+      \fill[sensorBlue!80] (-0.6, -0.9) rectangle (0.8, -1.15);
+      \node[white, font=\bfseries\tiny] at (0.1, 1.02) {LED};
+      \node[white, font=\bfseries\tiny] at (0.1, -1.02) {FOTO};
+
+      % Raios
+      \draw[dashed, deoxyRed, -{Latex[length=2mm]}, thick] (-0.05, 0.85) -- (-0.05, -0.85);
+      \draw[dashed, irOrange, -{Latex[length=2mm]}, thick] (0.3, 0.85) -- (0.3, -0.85);
+      \node[right, deoxyRed, scale=0.85] at (-0.05, 0.4) {R};
+      \node[right, irOrange, scale=0.85] at (0.3, -0.4) {IR};
+  \end{tikzpicture}
+  \par\vspace{1pt}
+}}
+\par
+
+% =====================================================================
+% COLUNA 2 — FATORES DE PRECISÃO
+% =====================================================================
+\columnbreak
+
+\secbar{precGreen}{FATORES QUE AFETAM A PRECISÃO}
+
+\infocard{precGreen}{COR DA PELE}{%
+    A melanina absorve luz e pode causar \textbf{superestimação} da SpO\textsubscript{2} real.\\[2pt]
+    \begin{tabular}{@{}p{\dimexpr\linewidth-4pt}@{}}
+    \rowcolor{precLight}
+    Pacientes negros: \textbf{3$\times$ mais risco de hipoxemia oculta} (SpO\textsubscript{2} aparentemente normal com SaO\textsubscript{2} real baixa). \\
+    \end{tabular}\\[2pt]
+    \kp{Diferença pode chegar a \textbf{4--8\%} em hipoxemia moderada.}
+    \kp{Sensor de reflexão (testa) pode atenuar parcialmente.}
+}{A oximetria pode ser \textbf{falsamente tranquilizadora} em pele negra. Dosar SaO\textsubscript{2} na gasometria se suspeitar.}
+
+\infocard{precGreen}{ESMALTE DE UNHA}{%
+    Esmaltes absorvem luz adicional no espectro vermelho/IR.\\[2pt]
+    \begin{tabular}{@{}>{\bfseries\scriptsize}l >{\scriptsize}l@{}}
+    \rowcolor{precLight}
+    Cores que interferem & Azul, verde, preto \\
+    Cores seguras & Vermelho, rosa, francesinha \\
+    \rowcolor{precLight}
+    Conduta & Remover ou usar outro dedo \\
+    \end{tabular}
+}{}
+
+\infocard{precGreen}{ESTADOS DE BAIXO FLUXO}{%
+    \kp{\textbf{Choque} --- vasoconstrição reduz componente AC.}
+    \kp{\textbf{Hipotensão} --- sinal fraco e leitura instável.}
+    \kp{\textbf{ECMO\,/\,LVAD} --- fluxo não-pulsátil. Oximetria convencional \textbf{inútil}.}
+    \kp{\textbf{Hipotermia} --- vasoconstrição periférica. Usar probe central (testa).}
+}{Índice de Perfusão (PI) $<$ 0,4\% sugere sinal inadequado. Se PI baixo, desconfiar da leitura.}
+
+\infocard{precGreen}{PRECISÃO EM BAIXA SpO\textsubscript{2}}{%
+    A curva de calibração foi derivada de \textbf{voluntários saudáveis} (dados confiáveis até $\sim$75\%).\\[2pt]
+    \begin{tabular}{@{}>{\scriptsize}l >{\scriptsize}l@{}}
+    \rowcolor{precLight}
+    \textbf{SpO\textsubscript{2} $>$ 80\%} & Precisão $\pm$ 2\% \\
+    \textbf{SpO\textsubscript{2} 70--80\%} & Precisão $\pm$ 3--5\% \\
+    \rowcolor{precLight}
+    \textbf{SpO\textsubscript{2} $<$ 70\%} & \textbf{Não confiável} \\
+    \end{tabular}
+}{}
+
+\infocard{precGreen}{HIPEROXEMIA}{%
+    A oximetria não distingue PaO\textsubscript{2} normal de supra-normal quando SpO\textsubscript{2} bate em 100\%.\\[2pt]
+    \kp{Alvo razoável: \spo{SpO\textsubscript{2} 94--98\%}}
+    \kp{Pós-parada cardíaca: evitar PaO\textsubscript{2} $>$ 300\,mmHg.}
+}{Hiperóxia causa vasoconstrição cerebral, lesão oxidativa e piora desfechos pós-PCR.}
+
+\infocard{precGreen}{ATRASO NA LEITURA (LAG)}{%
+    \begin{tabular}{@{}>{\bfseries\scriptsize}l >{\scriptsize}l@{}}
+    \rowcolor{precLight}
+    Dedo & 5--15\,s de atraso \\
+    Orelha/Testa & 2--5\,s (mais central) \\
+    \rowcolor{precLight}
+    Hipotensão & Lag prolongado \\
+    \end{tabular}\\[2pt]
+    \kp{A SpO\textsubscript{2} pode \textbf{continuar caindo} após intubação correta.}
+    \kp{Não usar como única confirmação de via aérea.}
+}{}
+
+% =====================================================================
+% COLUNA 3 — HEMOGLOBINAS + INTERFERÊNCIAS
+% =====================================================================
+\columnbreak
+
+\secbar{hemPurple}{HEMOGLOBINAS ANORMAIS}
+
+\infocard{hemPurple}{CARBOXIHEMOGLOBINA (CoHb)}{%
+    O oxímetro convencional \textbf{não distingue} CoHb de OxyHb (ambas absorvem de forma semelhante no Red).\\[2pt]
+    \begin{tabular}{@{}>{\bfseries\scriptsize}l >{\scriptsize}l@{}}
+    \rowcolor{hemLight}
+    Leitura & \textbf{Falsamente NORMAL} (90--100\%) \\
+    Realidade & Paciente profundamente hipóxico \\
+    \rowcolor{hemLight}
+    Quando & Incêndio, escapamento, narguile \\
+    Diagnóstico & Co-oximetria (SaO\textsubscript{2} real) \\
+    \end{tabular}
+}{SpO\textsubscript{2} ``normal'' em vítima de incêndio NÃO exclui intoxicação por CO!}
+
+\infocard{hemPurple}{METEMOGLOBINEMIA (MetHb)}{%
+    MetHb absorve igualmente Red e IR $\rightarrow$ razão R $\rightarrow$ 1 $\rightarrow$ SpO\textsubscript{2} trava em $\sim$\textbf{85\%}.\\[2pt]
+    \begin{tabular}{@{}>{\bfseries\scriptsize}l >{\scriptsize}l@{}}
+    \rowcolor{hemLight}
+    Leitura & ``Trava'' em $\sim$85\% \\
+    Causas & Dapsona, anestésicos locais, nitratos \\
+    \rowcolor{hemLight}
+    Clínica & Cianose com PaO\textsubscript{2} normal \\
+    Conduta & Co-oximetria + azul de metileno \\
+    \end{tabular}
+}{MetHb $>$ 1\%: leitura não confiável. SpO\textsubscript{2} converge para 85\% independente da SaO\textsubscript{2}.}
+
+\infocard{hemPurple}{OUTRAS HEMOGLOBINAS}{%
+    \kp{\textbf{Sulfa-Hb} --- leitura espuriamente \textbf{baixa}. Paciente pode não estar hipóxico.}
+    \kp{\textbf{HbA1c $>$ 7} --- leve superestimativa da SpO\textsubscript{2}.}
+    \kp{\textbf{Hemoglobina Fetal (HbF)} --- não afeta significativamente.}
+}{Co-oximetria de pulso (4+ comprimentos de onda) mede MetHb e CoHb diretamente.}
+
+\vspace{2pt}
+\secbar{warnOrange}{INTERFERÊNCIAS TÉCNICAS}
+
+\infocard{warnOrange}{CORANTES E MEDICAMENTOS IV}{%
+    \begin{tabular}{@{}>{\bfseries\scriptsize}l >{\scriptsize}l >{\scriptsize}l@{}}
+    \rowcolor{warnYellow}
+    Azul de metileno & $\downarrow\downarrow$ SpO\textsubscript{2} (falsa) & 1--2\,min \\
+    Indocianina verde & $\downarrow$ SpO\textsubscript{2} (falsa) & $<$ 5\,min \\
+    \rowcolor{warnYellow}
+    Isossulfan azul & $\downarrow$ SpO\textsubscript{2} (falsa) & minutos \\
+    \end{tabular}\\[2pt]
+    \kp{Efeito \textbf{transitório} --- esperar washout antes de confiar na leitura.}
+}{}
+
+\infocard{warnOrange}{ARTEFATO DE MOVIMENTO}{%
+    \kp{Movimentos do paciente geram ondas falsas que mimetizam AC.}
+    \kp{Tecnologias modernas (Masimo Signal Extraction, Nellcor OxiMax) filtram melhor.}
+    \kp{Se SpO\textsubscript{2} oscila muito $\rightarrow$ provavelmente artefato.}
+}{}
+
+\infocard{warnOrange}{LUZ AMBIENTE}{%
+    \kp{Luz fluorescente, cirúrgica ou solar direta pode interferir.}
+    \kp{Cobrir o sensor com material opaco se necessário.}
+}{}
+
+% =====================================================================
+% COLUNA 4 — ONDA PLETISMOGRÁFICA + SUMÁRIO
+% =====================================================================
+\columnbreak
+
+\secbar{waveBlue}{ANÁLISE DA ONDA PLETISMOGRÁFICA}
+
+\infocard{waveBlue}{ANATOMIA DA ONDA}{%
+    \centering
+    \begin{tikzpicture}[scale=0.75, font=\sffamily\tiny]
+        \fill[waveLight] (0,0) .. controls (0.2,0) and (0.5,2.4) .. (0.8,2.4)
+            .. controls (1.0,2.4) and (1.2,1) .. (1.5,1)
+            .. controls (1.8,1.5) and (2.6,0) .. (3.2,0) -- cycle;
+        \draw[thick, waveBlue] (0,0) .. controls (0.2,0) and (0.5,2.4) .. (0.8,2.4)
+            .. controls (1.0,2.4) and (1.2,1) .. (1.5,1)
+            .. controls (1.8,1.5) and (2.6,0) .. (3.2,0);
+
+        \draw[dashed, stepGray!50] (0.8,0) -- (0.8,2.4);
+        \draw[dashed, stepGray!50] (1.5,0) -- (1.5,1);
+
+        \node[above, waveBlue, font=\bfseries\tiny] at (0.8, 2.4) {Pico Sistólico};
+        \node[right, stepGray, font=\tiny] at (1.5, 1.1) {Nó Dicrótico};
+
+        \draw[<->, stepGray] (0.8, -0.3) -- (1.5, -0.3) node[midway, below, font=\tiny] {$\Delta$T};
+    \end{tikzpicture}
+    \par\vspace{2pt}
+    \flushleft
+    \kp{\textbf{Pico Sistólico} = ejeção ventricular}
+    \kp{\textbf{Nó Dicrótico} = fechamento da valva aórtica}
+    \kp{\textbf{$\Delta$T} reflete compliance vascular}
+}{}
+
+\infocard{waveBlue}{PADRÕES CLÍNICOS}{%
+    \colorbox{waveLight}{\parbox{\dimexpr\linewidth-4pt}{\centering\bfseries\scriptsize NORMAL --- onda bem definida}}\\[2pt]
+    \centering
+    \begin{tikzpicture}[scale=0.5]
+        \draw[thick, waveBlue] (0,0) .. controls (0.2,0) and (0.4,1) .. (0.5,1) .. controls (0.6,1) and (0.7,0.4) .. (0.8,0.4) .. controls (0.9,0.8) and (1.5,0) .. (2,0)
+             (2,0) .. controls (2.2,0) and (2.4,1) .. (2.5,1) .. controls (2.6,1) and (2.7,0.4) .. (2.8,0.4) .. controls (2.9,0.8) and (3.5,0) .. (4,0)
+             (4,0) .. controls (4.2,0) and (4.4,1) .. (4.5,1) .. controls (4.6,1) and (4.7,0.4) .. (4.8,0.4) .. controls (4.9,0.8) and (5.5,0) .. (6,0);
+    \end{tikzpicture}
+    \par\vspace{3pt}
+
+    \flushleft
+    \colorbox{warnYellow}{\parbox{\dimexpr\linewidth-4pt}{\centering\bfseries\scriptsize SINAL FRACO --- $\downarrow$ perfusão}}\\[2pt]
+    \centering
+    \begin{tikzpicture}[scale=0.5]
+        \draw[thick, stepGray] (0,0) .. controls (0.2,0) and (0.4,0.25) .. (0.5,0.25) .. controls (0.6,0.25) and (0.7,0.1) .. (0.8,0.1) .. controls (0.9,0.15) and (1.5,0) .. (2,0)
+             (2,0) .. controls (2.2,0) and (2.4,0.25) .. (2.5,0.25) .. controls (2.6,0.25) and (2.7,0.1) .. (2.8,0.1) .. controls (2.9,0.15) and (3.5,0) .. (4,0)
+             (4,0) .. controls (4.2,0) and (4.4,0.25) .. (4.5,0.25) .. controls (4.6,0.25) and (4.7,0.1) .. (4.8,0.1) .. controls (4.9,0.15) and (5.5,0) .. (6,0);
+    \end{tikzpicture}
+    \par\vspace{3pt}
+
+    \flushleft
+    \colorbox{physLight}{\parbox{\dimexpr\linewidth-4pt}{\centering\bfseries\scriptsize VASOCONSTRIÇÃO --- $\uparrow$ dicrótico, $\Delta$T curto}}\\[2pt]
+    \centering
+    \begin{tikzpicture}[scale=0.5]
+        \draw[thick, physRed] (0,0) .. controls (0.2,0) and (0.4,1) .. (0.5,1) .. controls (0.6,1) and (0.7,0.7) .. (0.8,0.7) .. controls (0.9,0.9) and (1.5,0) .. (2,0)
+             (2,0) .. controls (2.2,0) and (2.4,1) .. (2.5,1) .. controls (2.6,1) and (2.7,0.7) .. (2.8,0.7) .. controls (2.9,0.9) and (3.5,0) .. (4,0)
+             (4,0) .. controls (4.2,0) and (4.4,1) .. (4.5,1) .. controls (4.6,1) and (4.7,0.7) .. (4.8,0.7) .. controls (4.9,0.9) and (5.5,0) .. (6,0);
+    \end{tikzpicture}
+    \par\vspace{3pt}
+
+    \flushleft
+    \colorbox{hemLight}{\parbox{\dimexpr\linewidth-4pt}{\centering\bfseries\scriptsize VASODILATAÇÃO --- $\uparrow$ sistólico, $\Delta$T longo}}\\[2pt]
+    \centering
+    \begin{tikzpicture}[scale=0.5]
+        \draw[thick, hemPurple] (0,0) .. controls (0.2,0) and (0.4,1.6) .. (0.5,1.6) .. controls (0.6,1.6) and (0.7,0.2) .. (0.8,0.2) .. controls (0.9,0.4) and (1.5,0) .. (2,0)
+             (2,0) .. controls (2.2,0) and (2.4,1.6) .. (2.5,1.6) .. controls (2.6,1.6) and (2.7,0.2) .. (2.8,0.2) .. controls (2.9,0.4) and (3.5,0) .. (4,0)
+             (4,0) .. controls (4.2,0) and (4.4,1.6) .. (4.5,1.6) .. controls (4.6,1.6) and (4.7,0.2) .. (4.8,0.2) .. controls (4.9,0.4) and (5.5,0) .. (6,0);
+    \end{tikzpicture}
+    \par
+}{}
+
+\vspace{2pt}
+\secbar{titleBar}{REGRA DE OURO}
+
+\noindent\fcolorbox{titleBar}{warnYellow}{\parbox{\dimexpr\linewidth-6pt}{%
+    \centering\scriptsize\bfseries
+    Sempre correlacione:\\[1pt]
+    \textbf{Onda} (forma) + \textbf{PI} (força) + \textbf{Pulso palpável}\\[2pt]
+    Em dúvida: \textcolor{physRed}{\textbf{Gasometria Arterial (SaO\textsubscript{2})}}\\
+    é o padrão-ouro mandatório.
+}}
+
+\vspace{3pt}
+
+\noindent\fcolorbox{sensorBlue}{sensorLight}{\parbox{\dimexpr\linewidth-6pt}{%
+    \scriptsize\bfseries\centering
+    CHECKLIST RÁPIDO\\[1pt]
+    \normalfont\scriptsize
+    \begin{tabular}{@{}l p{4.5cm}@{}}
+    \rowcolor{sensorLight}
+    \textbf{SpO\textsubscript{2} baixa?} & Checar sensor, posição, PI \\
+    \textbf{Onda ruim?} & Trocar dedo/local, aquecer \\
+    \rowcolor{sensorLight}
+    \textbf{Incêndio?} & Ignorar SpO\textsubscript{2}, pedir CoHb \\
+    \textbf{Cianose + SpO\textsubscript{2} ok?} & Pensar MetHb \\
+    \rowcolor{sensorLight}
+    \textbf{Pós-IOT?} & Lembrar do lag (5--15s) \\
+    \end{tabular}
+}}
+
+\end{multicols}
+
+\vspace{2pt}
+
+\noindent\colorbox{titleBar}{\parbox{\dimexpr\textwidth-4pt}{%
+  \centering\vspace{1pt}%
+  {\color{white!70}\scriptsize
+  Oxímetros convencionais usam 2 comprimentos de onda $\rightarrow$ só detectam OxyHb e DeoxyHb.
+  \quad$\bullet$\quad
+  Co-oxímetros de pulso (ex:\ Masimo Rainbow) usam 7+ $\lambda$ $\rightarrow$ medem SpCO, SpMet, SpHb.
+  \quad$\bullet$\quad
+  Material exclusivamente educacional.}%
+  \vspace{1pt}%
+}}
+
+\end{document}
