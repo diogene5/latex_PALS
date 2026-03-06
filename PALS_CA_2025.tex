@@ -1,11 +1,10 @@
 \documentclass[10pt]{article}
-\usepackage[paperwidth=36cm, paperheight=35cm, margin=1.5cm]{geometry}
+\usepackage[a4paper, landscape, margin=1.5cm]{geometry}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[brazil]{babel}
-
-% Uso de fonte sem serifa limpa (se disponível no sistema básico, Latin Modern Sans)
 \usepackage{lmodern}
+\usepackage{graphicx}
 \renewcommand{\familydefault}{\sfdefault}
 
 \usepackage{tikz}
@@ -14,260 +13,208 @@
 \pagestyle{empty}
 
 % Cores Fortes Baseadas no Estilo AHA Original
-\definecolor{ahared}{RGB}{205,32,44}      % Vermelho AHA
-\definecolor{ahayellow}{RGB}{240,171,0}   % Amarelo Chocável AHA
-\definecolor{ahablue}{RGB}{0,111,180}     % Azul RCP AHA
-\definecolor{ahagreen}{RGB}{0,133,66}     % Verde Resultados AHA
-\definecolor{ahagrey}{RGB}{80,80,80}      % Cinza Escuro para texto e linhas
-\definecolor{lightgrey}{RGB}{240,240,240} % Cinza muito claro para caixas laterais
+\definecolor{ahared}{RGB}{205,32,44}
+\definecolor{ahayellow}{RGB}{240,171,0}
+\definecolor{ahablue}{RGB}{0,111,180}
+\definecolor{ahagreen}{RGB}{0,133,66}
+\definecolor{ahagrey}{RGB}{80,80,80}
 
-% Estilos TikZ Profissionais
 \tikzset{
     basebox/.style={
-        rectangle, 
-        draw=#1, 
-        thick, 
-        fill=#1, 
-        text=white, 
-        rounded corners=4pt, 
-        align=left, 
-        inner sep=8pt, 
-        text width=7.5cm,
-        font=\sffamily\normalsize,
-        drop shadow={shadow xshift=1.5pt, shadow yshift=-1.5pt}
+        rectangle, draw=#1, thick, fill=#1, text=white, 
+        rounded corners=4pt, align=left, inner sep=6pt, 
+        text width=6.5cm, font=\sffamily\fontsize{9.5}{11}\selectfont,
+        drop shadow={shadow xshift=1pt, shadow yshift=-1pt}
     },
     redbox/.style={basebox=ahared},
     yellowbox/.style={basebox=ahayellow, text=black},
     bluebox/.style={basebox=ahablue},
     greenbox/.style={basebox=ahagreen},
     decision/.style={
-        rectangle, 
-        draw=ahagrey, 
-        thick,
-        fill=white, 
-        text=ahagrey,
-        rounded corners=2pt, 
-        align=center, 
-        inner sep=6pt, 
-        text width=3.5cm, 
-        font=\sffamily\bfseries,
-        drop shadow={shadow xshift=1.5pt, shadow yshift=-1.5pt}
+        diamond, aspect=1.3, draw=ahagrey, thick, fill=white, text=ahagrey,
+        align=center, inner sep=2pt, text width=2.6cm, 
+        font=\sffamily\bfseries\fontsize{9}{10}\selectfont,
+        drop shadow={shadow xshift=1pt, shadow yshift=-1pt}
     },
     numcirc/.style={
-        circle, 
-        fill=white, 
-        draw=#1, 
-        thick,
-        text=#1, 
-        font=\sffamily\bfseries\large, 
-        inner sep=2pt, 
-        minimum size=22pt
+        circle, fill=white, draw=#1, thick, text=#1, 
+        font=\sffamily\bfseries\normalsize, inner sep=1pt, minimum size=18pt
     },
     line/.style={
-        draw=ahagrey, 
-        ultra thick, 
-        -{Latex[length=3mm, width=2.5mm]}
+        draw=ahagrey, thick, -{Latex[length=2.5mm, width=2.0mm]}
     },
     sidebox/.style={
-        rectangle, 
-        draw=ahagrey, 
-        thick,
-        fill=white, 
-        text=black,
-        rounded corners=4pt, 
-        align=left, 
-        inner sep=8pt, 
-        text width=8.5cm, 
-        font=\sffamily\small,
-        drop shadow={shadow xshift=1.5pt, shadow yshift=-1.5pt}
-    },
-    sideboxTitle/.style={
-        fill=ahagrey, 
-        text=white, 
-        font=\sffamily\bfseries\normalsize, 
-        inner xsep=8pt, 
-        inner ysep=4pt, 
-        align=left
+        rectangle, draw=ahagrey, thick, fill=white, text=black,
+        rounded corners=4pt, align=left, inner sep=6pt, 
+        text width=6.5cm, font=\sffamily\fontsize{9}{11}\selectfont,
+        drop shadow={shadow xshift=1pt, shadow yshift=-1pt}
     }
 }
 
-% Macros para melhorar listas de itens dentro dos nós sem quebrar espaçamento Tikz
-\newcommand{\titem}[1]{\hangindent=3ex\mbox{$\bullet$ }#1\par}
+\newcommand{\titem}[1]{\hangindent=2ex\mbox{$\bullet$ }#1\par}
 
 \begin{document}
-
 \begin{center}
+\vspace*{\fill}
+\resizebox{!}{0.95\textheight}{%
 \begin{tikzpicture}[auto]
 
 % TÍTULO DO DIAGRAMA
-\node[font=\sffamily\huge\bfseries, text=ahared, align=center] (title) at (0, 0.5) {Algoritmo de Parada Cardiorrespiratória Pediátrica (PALS 2025)};
+\node[font=\sffamily\Huge\bfseries, text=ahared, align=center] (title) at (0, 1.0) {Algoritmo de Parada Cardiorrespiratória Pediátrica (PALS 2025)};
 
-% ==============================
 % TRONCO PRINCIPAL
-% ==============================
-\node[redbox] (box1) at (0, -1.5) {%
-    \textbf{Iniciar RCP}\\[1.5ex]
-    \titem{Iniciar ventilação com bolsa-máscara e fornecer oxigênio}
+\node[redbox, text width=5.5cm] (box1) at (0, -0.8) {%
+    \textbf{Iniciar RCP}\\[1ex]
+    \titem{Ventilação com bolsa-máscara e O2}
     \titem{Instalar monitor/desfibrilador}
 };
-\node[numcirc=ahared] at ([xshift=-14pt, yshift=14pt]box1.north west) {1};
+\node[numcirc=ahared] at ([xshift=-10pt, yshift=10pt]box1.north west) {1};
 
-\node[decision] (shock1) at (0, -4.0) {Ritmo \\ chocável?};
+\node[decision] (shock1) at (0, -2.8) {Ritmo\\chocável?};
 \draw[line] (box1) -- (shock1);
 
-% ==============================
-% LADO ESQUERDO: FV/TV sem pulso (x = -5.0)
-% ==============================
-\node[redbox, align=center] (box2) at (-5.5, -6.0) {\textbf{FV/TV sem pulso}};
-\node[numcirc=ahared] at ([xshift=-14pt, yshift=14pt]box2.north west) {2};
+% X Coordinates for Layout
+\def\xL{-4.8}
+\def\xR{4.8}
+\def\xS{11.5}  % Side panel X
+
+% === LADO ESQUERDO ===
+\node[redbox, align=center] (box2) at (\xL, -4.5) {\textbf{FV/TV sem pulso}};
+\node[numcirc=ahared] at ([xshift=-10pt, yshift=10pt]box2.north west) {2};
 \draw[line] (shock1.west) -| node[above, near start, font=\bfseries] {Sim} (box2.north);
 
-\node[yellowbox, align=center] (box3) at (-5.5, -7.8) {\textbf{Choque}\\ \normalsize (o mais rápido possível)};
-\node[numcirc=ahayellow] at ([xshift=-14pt, yshift=14pt]box3.north west) {3};
+\node[yellowbox, align=center] (box3) at (\xL, -6.0) {\textbf{Choque}\\ \normalsize (o mais rápido possível)};
+\node[numcirc=ahayellow] at ([xshift=-10pt, yshift=10pt]box3.north west) {3};
 \draw[line] (box2) -- (box3);
 
-\node[bluebox] (box4) at (-5.5, -9.8) {
-    \textbf{RCP por 2 min}\\[1.5ex]
+\node[bluebox] (box4) at (\xL, -7.5) {
+    \textbf{RCP por 2 min}\\[1ex]
     \titem{Acesso IV/IO}
 };
-\node[numcirc=ahablue] at ([xshift=-14pt, yshift=14pt]box4.north west) {4};
+\node[numcirc=ahablue] at ([xshift=-10pt, yshift=10pt]box4.north west) {4};
 \draw[line] (box3) -- (box4);
 
-\node[decision] (shock2) at (-5.5, -12.3) {Ritmo \\ chocável?};
+\node[decision] (shock2) at (\xL, -9.5) {Ritmo\\chocável?};
 \draw[line] (box4) -- (shock2);
 
-\node[yellowbox, align=center] (box5) at (-5.5, -14.3) {\textbf{Choque}};
-\node[numcirc=ahayellow] at ([xshift=-14pt, yshift=14pt]box5.north west) {5};
+\node[yellowbox, align=center] (box5) at (\xL, -11.5) {\textbf{Choque}};
+\node[numcirc=ahayellow] at ([xshift=-10pt, yshift=10pt]box5.north west) {5};
 \draw[line] (shock2.south) -- node[right, font=\bfseries] {Sim} (box5.north);
 
-\node[bluebox] (box6) at (-5.5, -17.0) {
-    \textbf{RCP por 2 min}\\[1.5ex]
+\node[bluebox] (box6) at (\xL, -13.5) {
+    \textbf{RCP por 2 min}\\[1ex]
     \titem{Epinefrina a cada 3 a 5 min}
-    \titem{Considerar via aérea avançada e capnografia}
+    \titem{Considerar via aérea avançada/capnografia}
 };
-\node[numcirc=ahablue] at ([xshift=-14pt, yshift=14pt]box6.north west) {6};
+\node[numcirc=ahablue] at ([xshift=-10pt, yshift=10pt]box6.north west) {6};
 \draw[line] (box5) -- (box6);
 
-\node[decision] (shock3) at (-5.5, -20.0) {Ritmo \\ chocável?};
+\node[decision] (shock3) at (\xL, -16.0) {Ritmo\\chocável?};
 \draw[line] (box6) -- (shock3);
 
-\node[yellowbox, align=center] (box7) at (-5.5, -22.0) {\textbf{Choque}};
-\node[numcirc=ahayellow] at ([xshift=-14pt, yshift=14pt]box7.north west) {7};
+\node[yellowbox, align=center] (box7) at (\xL, -18.0) {\textbf{Choque}};
+\node[numcirc=ahayellow] at ([xshift=-10pt, yshift=10pt]box7.north west) {7};
 \draw[line] (shock3.south) -- node[right, font=\bfseries] {Sim} (box7.north);
 
-\node[bluebox] (box8) at (-5.5, -24.8) {
-    \textbf{RCP por 2 min}\\[1.5ex]
+\node[bluebox] (box8) at (\xL, -20.0) {
+    \textbf{RCP por 2 min}\\[1ex]
     \titem{Amiodarona ou lidocaína}
     \titem{Tratar causas reversíveis}
 };
-\node[numcirc=ahablue] at ([xshift=-14pt, yshift=14pt]box8.north west) {8};
+\node[numcirc=ahablue] at ([xshift=-10pt, yshift=10pt]box8.north west) {8};
 \draw[line] (box7) -- (box8);
 
-% Retorno (Loop do choque)
-\coordinate (ret5) at (-5.5, -26.8);
-\draw[line] (box8.south) -- (ret5) -- ++(-4.5cm,0) |- node[pos=0.25, left, font=\bfseries] {Sim} (box5.west);
-\node[font=\sffamily\bfseries\normalsize, text=ahagrey] at (-5.5, -26.5) {Ritmo chocável?};
+\coordinate (ret5) at (\xL, -21.8);
+\draw[line] (box8.south) -- (ret5) -- ++(-3.8cm,0) |- node[pos=0.25, left, font=\bfseries] {Sim} (box5.west);
+\node[font=\sffamily\bfseries, text=ahagrey] at (\xL, -21.5) {Ritmo chocável?};
 
-% ==============================
-% LADO DIREITO: Assistolia/AESP (x = 5.0)
-% ==============================
-\node[redbox, align=center] (box9) at (5.5, -6.0) {\textbf{Assistolia/AESP}};
-\node[numcirc=ahared] at ([xshift=-14pt, yshift=14pt]box9.north west) {9};
+
+% === LADO DIREITO ===
+\node[redbox, align=center] (box9) at (\xR, -4.5) {\textbf{Assistolia/AESP}};
+\node[numcirc=ahared] at ([xshift=-10pt, yshift=10pt]box9.north west) {9};
 \draw[line] (shock1.east) -| node[above, near start, font=\bfseries] {Não} (box9.north);
 
-\node[bluebox, align=center] (box10_pre) at (5.5, -7.8) {\textbf{Epinefrina}\\ \normalsize (o mais rápido possível)};
+\node[bluebox, align=center] (box10_pre) at (\xR, -6.0) {\textbf{Epinefrina}\\ \normalsize (o mais rápido possível)};
 \draw[line] (box9) -- (box10_pre);
 
-\node[bluebox] (box10) at (5.5, -10.3) {
-    \textbf{RCP por 2 min}\\[1.5ex]
+\node[bluebox] (box10) at (\xR, -8.0) {
+    \textbf{RCP por 2 min}\\[1ex]
     \titem{Acesso IV/IO}
     \titem{Epinefrina a cada 3 a 5 min}
-    \titem{Considerar via aérea avançada e capnografia}
+    \titem{Considerar via aérea avançada/capnografia}
 };
-\node[numcirc=ahablue] at ([xshift=-14pt, yshift=14pt]box10.north west) {10};
+\node[numcirc=ahablue] at ([xshift=-10pt, yshift=10pt]box10.north west) {10};
 \draw[line] (box10_pre) -- (box10);
 
-\node[decision] (shock4) at (5.5, -13.5) {Ritmo \\ chocável?};
+\node[decision] (shock4) at (\xR, -10.5) {Ritmo\\chocável?};
 \draw[line] (box10) -- (shock4);
 
-\node[bluebox] (box11) at (5.5, -16.0) {
-    \textbf{RCP por 2 min}\\[1.5ex]
+\node[bluebox] (box11) at (\xR, -12.5) {
+    \textbf{RCP por 2 min}\\[1ex]
     \titem{Tratar causas reversíveis}
 };
-\node[numcirc=ahablue] at ([xshift=-14pt, yshift=14pt]box11.north west) {11};
+\node[numcirc=ahablue] at ([xshift=-10pt, yshift=10pt]box11.north west) {11};
 \draw[line] (shock4.south) -- node[right, font=\bfseries] {Não} (box11.north);
 
-\node[decision] (shock5) at (5.5, -19.0) {Ritmo \\ chocável?};
+\node[decision] (shock5) at (\xR, -15.0) {Ritmo\\chocável?};
 \draw[line] (box11) -- (shock5);
 
-% Cruzamentos da Direita para a Esquerda
-\coordinate (retYes10) at (4.0, -13.5);
-\coordinate (retYes11) at (4.0, -19.0);
+\draw[line] (shock4.west) -- node[above, font=\bfseries] {Sim} ++(-1.0,0) |- (box5.east);
+\draw[line] (shock5.west) -- node[above, font=\bfseries] {Sim} ++(-1.0,0) |- (box7.east);
 
-\draw[line] (shock4.west) -- node[above, font=\bfseries] {Sim} (retYes10) |- (box5.east);
-\draw[line] (shock5.west) -- node[above, font=\bfseries] {Sim} (retYes11) |- (box7.east);
-
-% ==============================
 % CAIXA VERDE (Final)
-% ==============================
-\node[greenbox, text width=9.5cm] (box12) at (0, -28.5) {
-    \titem{Se não houver sinais de retorno da circulação espontânea (RCE), vá para 10 ou 11}
-    \vspace{1ex}
-    \titem{Se houver RCE, vá para Cuidados Pós-Parada Cardiorrespiratória}
+\node[greenbox, text width=8cm] (box12) at (0, -23.5) {
+    \titem{Se não houver RCE, vá para 10 ou 11}
+    \titem{Se houver RCE, vá para Cuidados Pós-Parada}
 };
-\node[numcirc=ahagreen] at ([xshift=-14pt, yshift=14pt]box12.north west) {12};
+\node[numcirc=ahagreen] at ([xshift=-10pt, yshift=10pt]box12.north west) {12};
 
-% Conectar "Não" do Lado Esquerdo para a caixa Verde
-\draw[line] (shock2.east) -- node[above, font=\bfseries] {Não} (-1.0, -12.3) -- (-1.0, -28.5) -- (box12.west);
-\draw[line] (shock3.east) -- node[above, font=\bfseries] {Não} (-1.0, -20.0);
-
-% Retorno para Green Box (Não do lado esquerdo)
-\draw[line] (-5.5, -26.8) -- node[above, font=\bfseries] {Não} (-1.0, -26.8);
+\draw[line] (shock2.east) -- node[above, near start, font=\bfseries] {Não} (-1.0, -9.5) -- (-1.0, -23.5) -- (box12.west);
+\draw[line] (shock3.east) -- node[above, near start, font=\bfseries] {Não} (-1.0, -16.0);
+\draw[line] (\xL, -21.8) -- node[above, font=\bfseries] {Não} (-1.0, -21.8);
 
 
-% ==============================
-% PAINEL LATERAL (Textos Auxiliares)  (x = 12.0)
-% ==============================
-\node[sidebox] (side1) at (12.0, -1.0) [anchor=north] {
-    \textbf{\textcolor{ahared}{Qualidade da RCP}}\\[1.5ex]
-    \titem{Comprimir com força ($\ge$ 1/3 do diâmetro AP do tórax) e rápido (100 a 120/min) e permitir o retorno total do tórax.}
-    \titem{Minimizar as interrupções nas compressões.}
-    \titem{Alternar o responsável pelas compressões a cada 2 min, ou antes se houver cansaço.}
-    \titem{Se não houver via aérea avançada, relação compressão-ventilação de 15:2.}
-    \titem{Se houver via aérea avançada, fornecer compressões contínuas e 1 ventilação a cada 2 a 3 segundos.}
+% === PAINEL LATERAL ===
+\node[sidebox] (side1) at (\xS, -1.8) [anchor=north] {
+    \textbf{\textcolor{ahared}{Qualidade da RCP}}\\[1ex]
+    \titem{Comprimir com força ($\ge$ 1/3 do diâmetro AP) e rápido (100 a 120/min); permitir retorno total.}
+    \titem{Minimizar as interrupções.}
+    \titem{Alternar responsável a cada 2 min.}
+    \titem{Sem via aérea avançada: 15:2.}
+    \titem{Com via aérea avançada: contínuo + 1 resp a cada 2-3s.}
 };
 
-\node[sidebox] (side2) at (12.0, -7.0) [anchor=north] {
-    \textbf{\textcolor{ahared}{Energia de Choque}}\\[1.5ex]
-    \titem{Primeiro choque 2 J/kg}
-    \titem{Segundo choque 4 J/kg}
-    \titem{Choques subsequentes $\ge$ 4 J/kg, máx 10 J/kg ou dose de adulto}
+\node[sidebox] (side2) at (\xS, -6.5) [anchor=north] {
+    \textbf{\textcolor{ahared}{Energia de Choque}}\\[1ex]
+    \titem{1º choque: 2 J/kg}
+    \titem{2º choque: 4 J/kg}
+    \titem{Subsequentes: $\ge$ 4 J/kg, máx 10 J/kg}
 };
 
-\node[sidebox] (side3) at (12.0, -10.5) [anchor=north] {
-    \textbf{\textcolor{ahared}{Terapia Medicamentosa}}\\[1.5ex]
-    \titem{\textbf{Epinefrina:} 0,01 mg/kg IV/IO (0,1 mL/kg da concentração 0,1 mg/mL). Máx 1 mg.}
-    \vspace{0.5ex}
-    \titem{\textbf{Amiodarona:} 5 mg/kg IV/IO em bolus (máx 300 mg). Repetir até 3 doses. OU}
-    \vspace{0.5ex}
+\node[sidebox] (side3) at (\xS, -9.5) [anchor=north] {
+    \textbf{\textcolor{ahared}{Terapia Medicamentosa}}\\[1ex]
+    \titem{\textbf{Epinefrina:} 0,01 mg/kg IV/IO. Máx 1 mg.}
+    \titem{\textbf{Amiodarona:} 5 mg/kg IV/IO (máx 300 mg). Repetir até 3 doses. OU}
     \titem{\textbf{Lidocaína:} 1 mg/kg IV/IO.}
 };
 
-\node[sidebox] (side4) at (12.0, -16.0) [anchor=north] {
-    \textbf{\textcolor{ahared}{Via Aérea Avançada}}\\[1.5ex]
-    \titem{Intubação endotraqueal ou via aérea supraglótica.}
-    \titem{Capnografia ou capnometria para confirmar e monitorar.}
+\node[sidebox] (side4) at (\xS, -13.5) [anchor=north] {
+    \textbf{\textcolor{ahared}{Via Aérea Avançada}}\\[1ex]
+    \titem{Intubação endotraqueal ou supraglótica.}
+    \titem{Capnografia para confirmar.}
 };
 
-\node[sidebox] (side5) at (12.0, -19.0) [anchor=north] {
-    \textbf{\textcolor{ahared}{Causas Reversíveis}}\\[1.5ex]
+\node[sidebox] (side5) at (\xS, -16.0) [anchor=north] {
+    \textbf{\textcolor{ahared}{Causas Reversíveis}}\\[1ex]
     \titem{Hipovolemia \hfill Hipotermia}
-    \titem{Hipóxia \hfill Tensão no tórax (pneumotórax)}
+    \titem{Hipóxia \hfill Tensão no tórax}
     \titem{Hidrogênio (acidose) \hfill Tamponamento cardíaco}
     \titem{Hipoglicemia \hfill Toxinas}
     \titem{Hipo-/hipercalemia \hfill Trombose (pulm./coro.)}
 };
 
-\end{tikzpicture}
+\end{tikzpicture}%
+}
+\vspace*{\fill}
 \end{center}
 \end{document}
