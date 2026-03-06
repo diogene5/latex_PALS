@@ -1,5 +1,5 @@
 \documentclass[9pt,landscape,a4paper]{article}
-\usepackage[landscape,margin=0.5cm,top=0.6cm,bottom=0.6cm]{geometry}
+\usepackage[landscape,margin=0.6cm,top=0.6cm,bottom=0.6cm]{geometry}
 \usepackage{fontspec}
 \usepackage[brazilian]{babel}
 \usepackage{xcolor}
@@ -7,161 +7,196 @@
 \usepackage{amsmath,amssymb}
 \usepackage{booktabs}
 \usepackage{tikz}
+\usepackage{colortbl}
 
 % --- TIPOGRAFIA ---
-% Fira Sans para visual clean e condensado
 \setmainfont{Helvetica Neue}[
-    Scale=0.85, 
+    Scale=0.75, 
     BoldFont={Helvetica Neue Bold},
     ItalicFont={Helvetica Neue Italic}
 ]
-\newfontfamily\titlefont{Helvetica Neue Condensed Bold}[Scale=1.2]
-\newfontfamily\headerfont{Helvetica Neue Condensed Bold}[Scale=1.0]
+\newfontfamily\headerfont{Helvetica Neue Condensed Bold}[Scale=1.1]
+\newfontfamily\titlefont{Helvetica Neue Condensed Bold}[Scale=1.5]
 
 \pagestyle{empty}
-
-% --- AJUSTES DE ESPAÇAMENTO (CHEAT SHEET) ---
 \setlength{\parindent}{0pt}
-\setlength{\parskip}{0pt plus 0.5ex}
-\setlength{\columnsep}{0.4cm}
-\setlength{\columnseprule}{0.2pt}
+\setlength{\columnsep}{0.6cm}
 
 % --- CORES ---
-\definecolor{csDark}{RGB}{40, 40, 40}
-\definecolor{csAccent}{RGB}{0, 100, 180}
-\definecolor{csLight}{RGB}{240, 240, 240}
+\definecolor{csPrimary}{RGB}{0, 64, 128}   % Azul escuro elegante
+\definecolor{csSecondary}{RGB}{0, 120, 180} % Azul médio
+\definecolor{csAccent}{RGB}{200, 50, 50}    % Vermelho para alertas
+\definecolor{rowA}{RGB}{255,255,255}
+\definecolor{rowB}{RGB}{240,245,250}
 
-% --- MACROS ---
-\newcommand{\csTitle}[1]{
-    \begin{center}
-        \colorbox{csDark}{\parbox{\dimexpr\linewidth-2\fboxsep\relax}{\centering\color{white}\titlefont\large #1}}
-    \end{center}
-    \vspace{-0.2cm}
+% --- MACROS DE LAYOUT SEGURO (TIKZ PURO) ---
+\newcommand{\csbox}[2]{%
+\vspace{0.15cm}\noindent%
+\begin{tikzpicture}
+    \node[draw=csPrimary, fill=white, line width=0.8pt, rounded corners=3pt, inner sep=5pt, text width=\dimexpr\linewidth-10pt-1.6pt] {%
+        {\color{csPrimary}\headerfont\large\MakeUppercase{#1}}\\[0.15cm]
+        #2
+    };
+\end{tikzpicture}\par
 }
 
-\newcommand{\csSection}[1]{
-    \vspace{0.2cm}
-    \colorbox{csAccent}{\parbox{\dimexpr\linewidth-2\fboxsep\relax}{\color{white}\headerfont #1}}
-    \vspace{0.1cm}
+\newcommand{\csalert}[2]{%
+\vspace{0.15cm}\noindent%
+\begin{tikzpicture}
+    \node[draw=csAccent, fill=white, line width=1.5pt, rounded corners=3pt, inner sep=5pt, text width=\dimexpr\linewidth-10pt-3pt] {%
+        {\color{csAccent}\headerfont\large\MakeUppercase{#1}}\\[0.15cm]
+        #2
+    };
+\end{tikzpicture}\par
+}
+
+% --- MACROS DE LISTA COM ÍCONES ---
+\newcommand{\cnum}[1]{%
+    \raisebox{-0.5pt}{%
+    \begin{tikzpicture}[baseline=(char.base)]
+        \node[shape=circle,fill=csSecondary,text=white,inner sep=0.5pt,minimum size=3.5mm,font=\bfseries\scriptsize] (char) {#1};
+    \end{tikzpicture}}%
 }
 
 \begin{document}
-\begin{multicols*}{4}
 
-\csTitle{OXIMETRIA DE PULSO ($SpO_2$)}
-{\scriptsize \textbf{Por:} Nick Mark MD | \textbf{Trad:} Equipe ICU}
-
-\csSection{Princípio Básico}
-A oximetria mede a saturação arterial de oxigênio de forma não-invasiva baseando-se em dois princípios:
-
-\textbf{1. Absorção Diferencial de Luz}
-Emissão em clipe (dedo/orelha) em dois comprimentos de onda:
-\begin{itemize}
-    \setlength{\itemsep}{1pt}
-    \renewcommand{\labelitemi}{\textcolor{csAccent}{\tiny$\blacksquare$}}
-    \item \textbf{Vermelho (660nm):} Altamente absorvido por $Hb$ (desoxa).
-    \item \textbf{Infravermelho (940nm):} Altamente ab. por $HbO_2$ (oxa).
-\end{itemize}
-
-\textbf{2. Fator Pulsátil (Pletismografia)}
-A absorção constante (osso, tecido, sangue venoso) é ignorada. Apenas a absorção \emph{variável} (sangue arterial pulsante na sístole) é computada.
-
-\begin{center}
-\begin{tikzpicture}[scale=0.65, font=\sffamily\tiny]
-    \fill[csLight] (-0.3,-0.3) rectangle (5.3,2.8);
-    \draw[->] (0,0) -- (5,0) node[right=-2pt] {$\lambda$};
-    \draw[->] (0,0) -- (0,2.5) node[above=-2pt] {Abs.};
-    \draw[thick, red] (0.2, 2.2) .. controls (1.5, 1.8) and (3, 0.5) .. (4.5, 0.4) node[right] {$HbO_2$};
-    \draw[thick, blue] (0.2, 0.4) .. controls (1.5, 0.8) and (3, 2.2) .. (4.5, 2.2) node[right] {$Hb$};
-    \draw[dashed, gray] (1.0,0) -- (1.0,2.5); \node[above] at (1.0,2.5) {660};
-    \draw[dashed, gray] (3.8,0) -- (3.8,2.5); \node[above] at (3.8,2.5) {940};
+% HEADER DO CHEAT SHEET
+\begin{tikzpicture}
+    \node[draw=none, fill=csPrimary, rounded corners=4pt, inner sep=6pt, text width=\dimexpr\linewidth-12pt] {%
+        {\textcolor{white}{\titlefont OXIMETRIA DE PULSO ($SpO_2$) - GUIA DE REFERÊNCIA RÁPIDA}}\\[0.05cm]
+        {\textcolor{white!80}{\textbf{Autoria:} Nick Mark MD \quad |\quad \textbf{Tradução \& Adaptação:} Equipe ICU}}
+    };
 \end{tikzpicture}
-\end{center}
+\vspace{0.1cm}
 
-\csSection{Curva de Dissociação}
-O $SpO_2$ \textbf{não} é a mesma coisa que oxigênio dissolvido ($PaO_2$).
+\begin{multicols*}{3}
+
+\csbox{Fisiologia Básica}{
+A oximetria mede a saturação arterial de oxigênio de forma contínua usando dois princípios:
+
+\vspace{0.15cm}
+\textbf{1. Absorção Diferencial de Luz}\\
+A sonda emite luz em dois comprimentos de onda:
 \begin{itemize}
     \setlength{\itemsep}{1pt}
     \renewcommand{\labelitemi}{\textcolor{csAccent}{\tiny$\blacksquare$}}
-    \item \textbf{Segurança (Platô):} $PaO_2 > 60$ mmHg $\rightarrow$ $SpO_2 > 90\%$. Acima disso, oxímetro é insensível a aumentos de $PaO_2$.
-    \item \textbf{Perigo (Descida):} Queda no $SpO_2$ abaixo de 90\% significa redução DRÁSTICA do $PaO_2$.
+    \item \textbf{Vermelho (660nm):} Absorvido pela \textbf{Hb Reduzida ($Hb$)}.
+    \item \textbf{Infravermelho (940nm):} Absorvido pela \textbf{Hb Oxigenada ($HbO_2$)}.
 \end{itemize}
 
-\csSection{Interferências}
-A precisão cai severamente se o $SpO_2$ real for $< 80\%$. 
+\vspace{0.15cm}
+\textbf{2. Fluxo Pulsátil (Pletismografia)}\\
+Ignora a absorção constante (tecido, osso, sangue venoso). Calcula o oxigênio apenas no pulso arterial (fase sistólica).
+}
 
-\textbf{1. Má Circulação (Baixo fluxo pulsátil)}
-Choque, frio, vasopressores em alta dose. 
-\emph{Ação:} Usar clipe de orelha (mais responsivo).
+\csbox{Curva de Dissociação da Hb}{
+O $SpO_2$ (saturação) possui uma relação não-linear com o $PaO_2$ (oxigênio dissolvido no plasma).
 
-\textbf{2. Barreiras Físicas}
+\vspace{0.1cm}
 \begin{itemize}
     \setlength{\itemsep}{1pt}
-    \renewcommand{\labelitemi}{\textcolor{csAccent}{\tiny$\blacksquare$}}
-    \item \textbf{Esmalte:} Preto, azul e verde bloqueiam a luz.
-    \item \textbf{Luz:} Refletores fortes saturam o sensor.
-    \item \textbf{Movimento:} Tremores causam artefato pulsátil.
+    \renewcommand{\labelitemi}{\cnum{1}}
+    \item \textbf{Platô (Zona Segura):} Se $PaO_2 > 60$ mmHg, o $SpO_2 > 90\%$. Acima disso, o oxímetro é \textbf{insensível}. Um paciente com $PaO_2$ de 100 ou 500 mmHg lerá os mesmos 100\%.
+    
+    \renewcommand{\labelitemi}{\cnum{2}}
+    \item \textbf{Porção Descendente (Perigo):} Quedas de $SpO_2$ abaixo de 90\% indicam redução DRÁSTICA do $PaO_2$ (<60 mmHg).
+    
+    \renewcommand{\labelitemi}{\cnum{3}}
+    \item \textbf{Desvios da Curva:} 
+    \begin{itemize}
+        \renewcommand{\labelitemi}{\textcolor{csPrimary}{$\circ$}}
+        \item \emph{Dir.:} Acidose, Febre (facilita entrega tecidual).
+        \item \emph{Esq.:} Alcalose, Hipotermia.
+    \end{itemize}
 \end{itemize}
+}
 
-\textbf{Cor de Pele (Viés Racial)}
-\emph{Alerta Crítico:} Oxímetros frequentemente superestimam o $SaO_2$ real em pacientes com pele escura, causando \textbf{hipoxemia oculta} (SpO2 normal, mas PaO2 crítico).
-
-\csSection{Hemoglobinas Anormais}
-
-\textbf{1. Carboxihemoglobina (COHb)}
+\csalert{ALERTA: Viés Racial e Hipoxemia}{
+Oximetros modernos superestimam a saturação em pacientes com \textbf{pele escura}. 
 \begin{itemize}
     \setlength{\itemsep}{1pt}
-    \renewcommand{\labelitemi}{\textcolor{csAccent}{\tiny$\blacksquare$}}
-    \item \textbf{Causa:} Monóxido de carbono (fumaça).
-    \item \textbf{Problema:} Absorção idêntica ao $HbO_2$.
-    \item \textbf{Lê:} \textbf{$\sim$100\%} mesmo em hipóxia letal.
+    \renewcommand{\labelitemi}{\textcolor{csAccent}{\bfseries !}}
+    \item Risco 3x maior de \textbf{Hipoxemia Oculta} ($SpO_2$ parecendo normal na tela, mas $PaO_2$ crítico no sangue).
+    \item \textbf{Conduta:} Correlacione sempre com a clínica. Diante de suspeita, colete Gasometria.
 \end{itemize}
+}
 
-\textbf{2. Metemoglobina (MetHb)}
+\csbox{Interferências Físicas}{
+A precisão cai severamente se o $SpO_2$ for $< 80\%$ ou:
+
+\textbf{Circulação Periférica Ruim}
 \begin{itemize}
     \setlength{\itemsep}{1pt}
-    \renewcommand{\labelitemi}{\textcolor{csAccent}{\tiny$\blacksquare$}}
-    \item \textbf{Causa:} Dapsona, benzocaína, nitratos.
-    \item \textbf{Lê:} Congela em \textbf{$\sim$85\%}.
+    \renewcommand{\labelitemi}{\textcolor{csSecondary}{\textbf{--}}}
+    \item Choque, vasopressores em alta dose, ou manguito de PNI inflando no mesmo membro.
+    \item \emph{Solução:} Troque para sensor central (orelha ou testa), que dão fluxo carotídeo e demoram menos para refletir quedas.
 \end{itemize}
 
-\csSection{Tabela Resumo}
-\begin{center}
-\scriptsize
-\begin{tabular}{@{}ll@{}}
+\textbf{Bloqueio Óptico e Ruído}
+\begin{itemize}
+    \setlength{\itemsep}{1pt}
+    \renewcommand{\labelitemi}{\textcolor{csSecondary}{\textbf{--}}}
+    \item \textbf{Esmalte:} Cor azul, preto e verde bloqueiam a luz.
+    \item \textbf{Luz:} Refletores fortes saturam o fotodiodo. 
+    \item \textbf{Movimento:} Tremores imitam o feixe pulsátil e confundem o aparelho.
+\end{itemize}
+}
+
+\csbox{Interferência Tóxica (Hemoglobinas)}{
+Certos agentes tóxicos alteram a hemoglobina, enganando as frequências de luz do sensor.
+
+\rowcolors{1}{rowB}{rowA}
+\begin{tabular}{p{2.2cm} p{1.6cm} p{3.2cm}}
 \toprule
-\textbf{Fator} & \textbf{Efeito no $SpO_2$} \\ \midrule
-COHb (CO) & Falsamente normal \\
-MetHb & Fixo perto de 85\% \\
-Pele Escura & Risco de sobrestimar \\
-Esmalte azul & Falsamente baixo \\
-Movimento & Erro errático \\
-Choque & Sinal ruim / Inviável \\
-Azul de Met. & Queda súbita espúria \\ \bottomrule
+\textbf{Condição} & \textbf{Leitura} & \textbf{O que fazer?} \\
+\midrule
+\textbf{CO} (Monóxido) & Falso $\sim100\%$ mesmo c/ hipóxia. & Oxímetro é cego ao $CO$. Padrão: Gasometria c/ Co-Oximetria. \\
+\textbf{Metemoglobina} & Fixa em $\sim85\%$. & Oximetria inútil. Co-Oximetria obrigatória. \\
+\textbf{Azul Metileno} & Queda falsa. & Transitório (1-2 min). Aguardar. \\
+\bottomrule
 \end{tabular}
-\end{center}
+}
 
-\csSection{Validação pelo Monitor}
-\emph{Nunca confie num número sem olhar a curva pletismográfica!}
+\csbox{Análise da Onda Pletismográfica}{
+\textbf{Valide a qualidade da onda antes de tratar o número.}
+
+\vspace{0.1cm}
 \begin{center}
 \begin{tikzpicture}[scale=0.9, font=\sffamily\tiny]
-    \draw[gray, opacity=0.3] (0,0) grid (4,1);
-    \draw[thick, csDark] (0,0.1) .. controls (0.2,0.1) and (0.3,0.9) .. (0.5,0.9) 
-         .. controls (0.7,0.9) and (0.8,0.4) .. (0.9,0.5) 
-         .. controls (1.0,0.6) and (1.2,0.1) .. (1.6,0.1)
-         .. controls (1.8,0.1) and (1.9,0.9) .. (2.1,0.9)
-         .. controls (2.3,0.9) and (2.4,0.4) .. (2.5,0.5) 
-         .. controls (2.6,0.6) and (2.8,0.1) .. (3.2,0.1);
-    \node[anchor=south] at (0.5,0.9) {Sístole};
-    \node[anchor=west] at (1.0,0.5) {Incisura};
+    \draw[gray, opacity=0.3] (0,0) grid (5,1.5);
+    \draw[thick, csPrimary] (0,0.2) .. controls (0.2,0.2) and (0.3,1.3) .. (0.5,1.3) 
+         .. controls (0.7,1.3) and (0.8,0.6) .. (0.9,0.7) 
+         .. controls (1.0,0.8) and (1.4,0.2) .. (1.8,0.2)
+         .. controls (2.0,0.2) and (2.1,1.3) .. (2.3,1.3)
+         .. controls (2.5,1.3) and (2.6,0.6) .. (2.7,0.7) 
+         .. controls (2.8,0.8) and (3.2,0.2) .. (3.6,0.2)
+         .. controls (3.8,0.2) and (3.9,1.3) .. (4.1,1.3)
+         .. controls (4.3,1.3) and (4.4,0.6) .. (4.5,0.7) 
+         .. controls (4.6,0.8) and (5.0,0.2) .. (5.4,0.2);
+         
+    \node[anchor=south, text=csPrimary, font=\bfseries\scriptsize] at (2.3,1.3) {SÍSTOLE};
+    \draw[->, csAccent, thick] (2.9, 1.1) -- (2.75, 0.75);
+    \node[anchor=west, text=csAccent, font=\scriptsize] at (2.9,1.1) {Incisura Dicrótica};
 \end{tikzpicture}
 \end{center}
-O ritmo ($bpm$) deve bater com o do ECG. A presença da \textbf{incisura dicrótica} (fechamento aórtico) atesta boa perfusão periférica.
 
-\vspace{0.4cm}
-\begin{center}
-    \fbox{\parbox{4cm}{\centering\textbf{PADRÃO-OURO:}\\ Na dúvida, sempre colha Gasometria Arterial ($SaO_2$, $PaO_2$, Co-oximetria).}}
-\end{center}
+\vspace{0.1cm}
+\begin{itemize}
+    \setlength{\itemsep}{2pt}
+    \renewcommand{\labelitemi}{\cnum{1}}
+    \item \textbf{Pico Sistólico:} Deve acompanhar o batimento real.
+    \renewcommand{\labelitemi}{\cnum{2}}
+    \item \textbf{Incisura Dicrótica:} lombada na descida representa fechamento da valva aórtica. Atesta boa perfusão arterial.
+    \renewcommand{\labelitemi}{\cnum{3}}
+    \item \textbf{Validação FC:} A Frequência Cardíaca ($bpm$) do oxímetro DEVE bater com o ECG. Do contrário, o sinal é lixo.
+\end{itemize}
+}
+
+\csalert{O Padrão-Ouro}{
+Na dúvida (ex: choque, hipoxemia), \textbf{não confie no monitor}.\\[0.1cm]
+Sempre colete a \textbf{Gasometria Arterial} garantindo Co-Oximetria em suspeitas tóxicas.
+}
 
 \end{multicols*}
+
 \end{document}
