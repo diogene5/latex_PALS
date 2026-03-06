@@ -1,0 +1,179 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[a4paper,margin=1cm,top=0.6cm,bottom=0.6cm]{geometry}
+\usepackage{fontspec}
+\usepackage[brazilian]{babel}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{calc, positioning, arrows.meta}
+\usepackage{amsmath, amssymb}
+\usepackage{booktabs}
+\usepackage{multicol}
+\usepackage{microtype}
+
+% --- TIPOGRAFIA (Estilo Crisis) ---
+\setmainfont{Helvetica Neue}[
+  BoldFont={Helvetica Neue Bold},
+  ItalicFont={Helvetica Neue Italic},
+  Scale=0.95
+]
+\newfontfamily\headerfont{Helvetica Neue Condensed Bold}[Scale=1.4]
+\newfontfamily\idfont{Helvetica Neue Condensed Bold}[Scale=2.2]
+\newfontfamily\idlabelfont{Helvetica Neue Bold}[Scale=0.6]
+
+% --- CORES ---
+\definecolor{crisisBlue}{RGB}{0, 150, 210} 
+\definecolor{crisisOrange}{RGB}{230, 130, 40}
+\definecolor{crisisGray}{RGB}{60, 60, 60}
+\definecolor{crisisLightBlue}{RGB}{235, 245, 252}
+\definecolor{crisisRed}{RGB}{180, 40, 40}
+\definecolor{crisisLightRed}{RGB}{252, 235, 235}
+
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+
+% --- MACROS DE LAYOUT ---
+
+\newcommand{\crisisHeader}[4]{% #1=cor, #2=título, #3=subtítulo, #4=ID
+    \begin{tikzpicture}[remember picture, overlay]
+        \fill[#1] ($(current page.north west)+(0,0)$) rectangle ($(current page.north east)+(0,-3.2cm)$);
+        
+        % Título
+        \node[anchor=west, white] at ($(current page.north west)+(0.8cm,-1.6cm)$) {
+            \begin{minipage}{12cm}
+                {\fontsize{34}{38}\headerfont\MakeUppercase{#2}}\\[2pt]
+                {\fontsize{18}{22}\headerfont\MakeUppercase{#3}}
+            \end{minipage}
+        };
+
+        % Círculo ícone
+        \draw[white, line width=1.5pt] ($(current page.north east)+(-5.5cm,-1.6cm)$) circle (0.8cm);
+        \node[white] at ($(current page.north east)+(-5.5cm,-1.6cm)$) {
+            \begin{tikzpicture}[scale=0.5, white]
+                \draw[line width=1.5pt] (-0.3,0.3) arc (120:240:0.6) -- (0.3,-0.3) arc (-60:60:0.6) -- cycle;
+                \draw[line width=1pt] (-0.1,0) -- (0.1,0); 
+            \end{tikzpicture}
+        };
+
+        % ID BOX
+        \fill[white, rounded corners=3pt] ($(current page.north east)+(-3.5cm,-0.4cm)$) rectangle ($(current page.north east)+(-0.3cm,-2.8cm)$);
+        \node[#1, anchor=center] at ($(current page.north east)+(-1.9cm,-1.0cm)$) {\idfont #4};
+        \node[#1, anchor=center] at ($(current page.north east)+(-1.9cm,-1.8cm)$) {\idlabelfont CRISIS PROTOCOLS};
+        \fill[#1] ($(current page.north east)+(-3.5cm,-2.1cm)$) rectangle ($(current page.north east)+(-1.95cm,-2.7cm)$);
+        \fill[#1] ($(current page.north east)+(-1.85cm,-2.1cm)$) rectangle ($(current page.north east)+(-0.3cm,-2.7cm)$);
+        \node[white, anchor=center] at ($(current page.north east)+(-2.72cm,-2.4cm)$) {\idlabelfont SECTION ONE};
+        \node[white, anchor=center] at ($(current page.north east)+(-1.07cm,-2.4cm)$) {\idlabelfont SECTION TWO};
+    \end{tikzpicture}
+    \vspace{3.0cm}
+}
+
+% Box de alerta estilo Crisis
+\newcommand{\crisisAlert}[2]{% #1=título, #2=corpo
+    \vspace{0.2cm}
+    \begin{tikzpicture}
+        \node[rectangle, draw=crisisRed, fill=crisisLightRed, rounded corners=2pt, inner sep=6pt, text width=\dimexpr\linewidth-16pt] {
+            {\bfseries\small\textcolor{crisisRed}{#1}}\\[2pt]
+            {\footnotesize #2}
+        };
+    \end{tikzpicture}
+    \par\vspace{0.2cm}
+}
+
+% Box de sumário estilo Crisis
+\newcommand{\crisisSummary}[2]{% #1=título, #2=corpo
+    \vspace{0.2cm}
+    \begin{tikzpicture}
+        \node[rectangle, draw=crisisBlue, fill=crisisLightBlue, rounded corners=2pt, inner sep=6pt, text width=\dimexpr\linewidth-16pt] {
+            {\bfseries\small\textcolor{crisisBlue}{#1}}\\[2pt]
+            {\footnotesize #2}
+        };
+    \end{tikzpicture}
+    \par\vspace{0.2cm}
+}
+
+\begin{document}
+
+\crisisHeader{crisisBlue}{Oxímetro}{de Pulso SpO\textsubscript{2}}{42\textsubscript{A}}
+
+\textbf{AUTOR:} Nick Mark MD | \textbf{TRADUÇÃO:} Equipe ICU\par
+\vspace{0.3cm}
+
+\textcolor{crisisBlue}{\headerfont\large PRINCÍPIO E FISIOLOGIA}\par
+\vspace{0.1cm}
+{\small O oxímetro mede a saturação de oxigênio arterial ($SpO_2$) de forma contínua.}\par
+\vspace{0.1cm}
+{\small\bfseries \textcolor{crisisBlue}{1} Absorção Diferencial}: Utiliza luz \textcolor{red}{\textbf{Vermelha}} (660nm) e \textcolor{orange}{\textbf{Infravermelha}} (940nm).
+\begin{itemize}
+    \setlength{\itemsep}{0pt}
+    \item {\small Hemoglobina Oxigenada ($HbO_2$) absorve mais Infravermelho.}
+    \item {\small Hemoglobina Reduzida ($Hb$) absorve mais Vermelho.}
+\end{itemize}
+{\small\bfseries \textcolor{crisisBlue}{2} Fluxo Pulsátil (AC)}: Identifica o sangue arterial pelo pulso, filtrando o tecido/veias.
+
+\vspace{0.2cm}
+\begin{center}
+\begin{tikzpicture}[scale=1.1, font=\sffamily\tiny]
+    \fill[crisisLightBlue] (-0.5,-0.5) rectangle (6.5,3.2);
+    \draw[->, crisisGray] (0,0) -- (6,0) node[right] {$\lambda$ (nm)};
+    \draw[->, crisisGray] (0,0) -- (0,3) node[above] {Absorp.};
+    \draw[thick, xcolor=red!80] (0.5, 2.5) .. controls (2, 2) and (4, 0.5) .. (5.5, 0.4) node[right] {$HbO_2$};
+    \draw[thick, xcolor=blue!80] (0.5, 0.4) .. controls (2, 1) and (4, 2.5) .. (5.5, 2.5) node[right] {$Hb$};
+    \draw[dashed, crisisGray!50] (1.1,0) -- (1.1,3); \node[above, scale=0.8] at (1.1,3) {660};
+    \draw[dashed, crisisGray!50] (4.8,0) -- (4.8,3); \node[above, scale=0.8] at (4.8,3) {940};
+\end{tikzpicture}
+\end{center}
+
+\crisisAlert{ALERTA DE SEGURANÇA: HIPOXEMIA OCULTA}{
+    O oxímetro pode \textbf{superestimar} a saturação em pacientes com pele escura.
+    \begin{itemize}
+        \setlength{\itemsep}{0pt}
+        \item Risco 3x maior de hipoxemia não detectada.
+        \item SEMPRE correlacione com a clínica e gasometria ($SaO_2$).
+    \end{itemize}
+}
+
+\textcolor{crisisBlue}{\headerfont\large HEMOGLOBINAS ANORMAIS}\par
+\vspace{0.1cm}
+\begin{itemize}
+    \setlength{\itemsep}{0pt}
+    \item {\small \textbf{Carboxihemoglobina ($COHb$)}: Falsamente interpretada como $HbO_2$. Valores normais mesmo em intoxicação severa por CO (incêndios).}
+    \item {\small \textbf{Metemoglobina ($MetHb$)}: Leitura "travada" ao redor de \textbf{85\%}, ignorando o valor real.}
+\end{itemize}
+
+\vspace{0.3cm}
+\textcolor{crisisBlue}{\headerfont\large ANÁLISE DA ONDA PLETISMOGRÁFICA}\par
+\vspace{0.1cm}
+{\small Valide o sinal observando a onda antes de agir sobre o valor númerico.}\par
+\begin{itemize}
+    \setlength{\itemsep}{0pt}
+    \item {\small \textbf{Sístole}: Pico da onda. \textbf{Incisura Dicrótica}: Fechamento da valva aórtica.}
+\end{itemize}
+\vspace{0.1cm}
+\begin{center}
+\begin{tikzpicture}[scale=1.2, font=\sffamily\tiny]
+    \draw[gray, opacity=0.2] (0,0) grid (5,1.2);
+    \draw[thick, crisisBlue] (0,0.2) .. controls (0.2,0.2) and (0.3,1.1) .. (0.5,1.1) 
+         .. controls (0.7,1.1) and (0.8,0.5) .. (0.9,0.6) 
+         .. controls (1.0,0.7) and (1.4,0.2) .. (1.8,0.2)
+         .. controls (2.0,0.2) and (2.1,1.1) .. (2.3,1.1)
+         .. controls (2.5,1.1) and (2.6,0.5) .. (2.7,0.6) 
+         .. controls (2.8,0.7) and (3.2,0.2) .. (3.6,0.2);
+    \node[crisisBlue, font=\bfseries] at (0.5,1.3) {SÍSTOLE};
+    \node[crisisGray] at (1.2,0.7) {Dicrótica};
+\end{tikzpicture}
+\end{center}
+
+\crisisSummary{SUMÁRIO TÉCNICO \& REGRA DE OURO}{
+    \begin{tabular}{@{}lp{10cm}@{}}
+        \textbf{Choque} & Reduz sinal $\rightarrow$ Erro. Escolha probe central (testa/orelha). \\
+        \textbf{Interferência} & Esmalte escuro, luz intensa, movimento excessivo. \\
+        \textbf{Lag Time} & Atraso de 15--60s na detecção periférica. \\
+        \textbf{REGRA DE OURO} & Na dúvida, o padrão-ouro é a \textbf{Gasometria Arterial}. \\
+    \end{tabular}
+}
+
+\vfill
+\begin{center}
+    {\fontsize{7}{9}\selectfont \textcolor{crisisGray}{© 2025 ICU Crisis Protocols - Adaptado de Nick Mark MD. Uso educacional.}}
+\end{center}
+
+\end{document}
