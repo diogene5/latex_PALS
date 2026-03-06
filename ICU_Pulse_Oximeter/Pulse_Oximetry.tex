@@ -1,0 +1,276 @@
+\documentclass[10pt]{article}
+\usepackage[paperwidth=42cm, paperheight=30cm, margin=1.5cm]{geometry} % A3 Landscape
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage{lmodern}
+\renewcommand{\familydefault}{\sfdefault}
+
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, shapes.misc, arrows.meta, positioning, calc, shadows, fit, backgrounds, spy}
+\usepackage{xcolor}
+\usepackage{amsmath}
+\pagestyle{empty}
+
+% Paleta de Cores Baseada no Infográfico
+\definecolor{icured}{RGB}{205,32,44}       % LED Red
+\definecolor{icublue}{RGB}{0,111,180}      % OxyHb / SpO2
+\definecolor{icugrey}{RGB}{210,210,210}    % Fundo caixas cinzas
+\definecolor{icuorange}{RGB}{240,110,0}    % IR LED / IR Signal
+\definecolor{icudark}{RGB}{60,60,60}       % Texto escuro / Bordas
+\definecolor{iculight}{RGB}{240,240,245}   % Tinta pastel para fundo
+\definecolor{hcblack}{RGB}{30,30,30}       % Tela de Monitor
+
+\tikzset{
+    basebox/.style={
+        rectangle, rounded corners=6pt, draw=icudark, thick,
+        inner sep=8pt, font=\sffamily\fontsize{10}{12}\selectfont, align=left,
+        text=black, drop shadow={shadow xshift=1.5pt, shadow yshift=-1.5pt}
+    },
+    titlebox/.style={
+        basebox, fill=icugrey, text=icudark, font=\sffamily\bfseries\itshape,
+        align=center
+    },
+    textbox/.style={
+        basebox, fill=iculight, draw=icugrey, text width=6.5cm,
+        font=\sffamily\fontsize{10.5}{13}\selectfont
+    },
+    monitor/.style={
+        rectangle, rounded corners=4pt, draw=icugrey, ultra thick,
+        fill=hcblack, minimum width=14cm, minimum height=6cm
+    },
+    wavebox/.style={
+        rectangle, draw=none, fill=none, text=black, align=center,
+        font=\sffamily\fontsize{9}{11}\selectfont
+    },
+    arrowline/.style={
+        draw=icugrey!80!black, ultra thick, -{Latex[length=3mm, width=2.5mm]}
+    }
+}
+
+\newcommand{\titem}[1]{\hangindent=2ex\mbox{$\bullet$ }#1\par}
+\newcommand{\toptitle}[1]{\textbf{\uppercase{#1}}\\[0.5ex]}
+
+\begin{document}
+\begin{center}
+\vspace*{\fill}
+\resizebox{!}{0.95\textheight}{%
+\begin{tikzpicture}[auto]
+
+% ==============================
+% 1. CABEÇALHO E TÍTULO
+% ==============================
+\node[font=\sffamily\fontsize{36}{40}\bfseries, text=black, anchor=west] (title) at (-19, 13.5) {OXIMETRIA DE PULSO};
+\node[font=\sffamily\fontsize{16}{20}\selectfont, text=icudark, anchor=west] (author) at (-7.5, 13.5) {por Nick Mark MD (\textit{Tradução})};
+
+\node[font=\sffamily\fontsize{11}{13}\selectfont, text=black, anchor=north west, text width=26cm] (principle) at (-19, 12.3) {
+    \textbf{PRINCÍPIO:}\\
+    A oximetria de pulso é a medição contínua e não invasiva da saturação de oxigênio da hemoglobina. Ela explora o fato de que a hemoglobina oxigenada (OxyHb) e a desoxigenada (DeoxyHb) \textbf{\textcolor{icublue}{absorvem luz vermelha e infravermelha de forma diferente}}.
+};
+
+% Caixas de Fluxo (Princípio Físico)
+\node[titlebox, text width=5cm] (p1) at (-16, 10.0) {Emitir luz Vermelha (Red) e Infravermelha (IR) através da pele e medir a absorção};
+\node[titlebox, text width=5cm] (p2) at (-10, 10.0) {DeoxyHb e OxyHb possuem diferentes perfis de absorção de luz};
+\node[titlebox, text width=5cm] (p3) at (-4, 10.0) {O sinal que varia com o tempo representa o fluxo sanguíneo pulsátil};
+\node[titlebox, text width=5cm] (p4) at (2, 10.0) {Usando uma curva padrão, a razão da absorção Red/IR (razão de modulação) calcula a SpO2};
+
+\draw[arrowline] (p1) -- (p2);
+\draw[arrowline] (p2) -- (p3);
+\draw[arrowline] (p3) -- (p4);
+
+% Explicativos acima do Monitor
+\node[font=\sffamily\fontsize{10}{12}\selectfont, align=center, text width=4cm] at (8, 10.5) {A forma de onda da \textbf{pletismografia} mostra o sinal ao longo do tempo (pulso)};
+\node[font=\sffamily\fontsize{10}{12}\selectfont, align=center, text width=3cm] at (12.5, 10.5) {\textbf{Amplitude} aumenta com maior Volume Sistólico};
+\node[font=\sffamily\fontsize{10}{12}\selectfont, align=center, text width=3cm] at (16.5, 10.5) {\textbf{Índice de Perfusão} indica a força do sinal};
+
+% ==============================
+% 2. GRÁFICOS E ESQUEMAS (Meio)
+% ==============================
+
+% Dedo e Sensores (Esquema Simplificado)
+\begin{scope}[shift={(-17, 6.5)}]
+    \draw[thick, fill=orange!20, rounded corners=8pt] (-2, -0.5) rectangle (1, 0.5); % dedo base
+    \draw[ultra thick] (-1, 1) -- (0, 1) -- (0.5, 0.5) -- (1, 0.5) -- (1, -0.5) -- (0, -0.5) -- (-1, -1); % Clipe
+    \node[font=\sffamily\bfseries, text=icured] at (0, 1.8) {LED \textcolor{icuorange}{IR} e \textcolor{icured}{Red}};
+    \node[font=\sffamily\bfseries, text=black] at (0, -1.5) {Fotodiodo};
+    % Setas de luz
+    \draw[ultra thick, -Latex, icured] (0, 0.8) -- (0, -0.2);
+    \draw[ultra thick, -Latex, icuorange] (0.3, 0.8) -- (0.3, -0.2);
+\end{scope}
+
+% Gráfico 1: Absorção x Comprimento de Onda
+\begin{scope}[shift={(-12, 4)}]
+    % Eixos
+    \draw[thick] (0,0) -- (5,0) node[midway, below=0.5cm, font=\sffamily\bfseries] {Comprimento de Onda (nm)};
+    \draw[thick] (0,0) -- (0,4) node[midway, left=0.6cm, font=\sffamily\bfseries, rotate=90] {Absorção (\%)};
+    
+    % Linhas e Labels
+    \draw[ultra thick, icublue] (0, 3.5) .. controls (1.5, 1.5) and (3, 2) .. (5, 1.5); % OxyHb
+    \node[right, font=\sffamily\bfseries, text=icublue] at (4.2, 2.5) {OxyHb};
+    
+    \draw[ultra thick, icured] (0, 2.0) .. controls (1, 0.5) and (3, 2.5) .. (5, 2.5); % DeoxyHb
+    \node[right, font=\sffamily\bfseries, text=icured] at (4.2, 1.8) {DeoxyHb};
+
+    % Marcadores Red / IR
+    \draw[dashed] (1, 0) -- (1, 4) node[above, font=\sffamily\bfseries, text=icured] {Red (660 nm)};
+    \draw[dashed] (3.5, 0) -- (3.5, 4) node[above, font=\sffamily\bfseries, text=icuorange] {IR (940 nm)};
+\end{scope}
+
+% Gráfico 2: Razão de Modulação x SaO2
+\begin{scope}[shift={(-4, 4)}]
+    \draw[thick] (0,0) -- (4,0) node[midway, below=0.5cm, font=\sffamily\bfseries] {SaO2 (\%)};
+    \draw[thick] (0,0) -- (0,4) node[midway, left=0.6cm, font=\sffamily\bfseries, rotate=90] {Modulation Ratio (R)};
+    
+    % Curva descendente
+    \draw[ultra thick, icublue] (0, 3.8) .. controls (2, 3.5) and (3, 2.5) .. (4, 1.0);
+    
+    % Insets de onda (Red > IR vs IR > Red)
+    \node[font=\sffamily\bfseries, text=icured] at (3.5, 3.8) {Red > IR};
+    \node[font=\sffamily\bfseries, text=icuorange] at (3.5, 0.5) {IR > Red};
+\end{scope}
+
+% Monitor Screen
+\begin{scope}[shift={(6, 6)}]
+    \node[monitor] (tela) at (6, -1) {};
+    
+    % EKG Wave (Verde)
+    \draw[thick, green!80!black] (0, -0.5) -- (0.5, -0.5) -- (0.8, -0.3) -- (1.0, -1.0) -- (1.2, 0.8) -- (1.4, -0.5) -- (1.8, -0.5) -- (2.0, -0.2) -- (2.2, -0.5) -- (4, -0.5);
+    \draw[thick, green!80!black] (4, -0.5) -- (4.5, -0.5) -- (4.8, -0.3) -- (5.0, -1.0) -- (5.2, 0.8) -- (5.4, -0.5) -- (5.8, -0.5) -- (6.0, -0.2) -- (6.2, -0.5) -- (8, -0.5);
+    
+    % Pleth Wave (Azul claro / Ciano)
+    \draw[thick, cyan!80!white] (0, -3.0) .. controls (0.5, -3.0) and (0.8, -1.5) .. (1.0, -1.5) .. controls (1.2, -1.5) and (1.2, -2.5) .. (1.5, -2.5) .. controls (1.5, -2.0) and (2.0, -3.0) .. (4, -3.0);
+    \draw[thick, cyan!80!white] (4, -3.0) .. controls (4.5, -3.0) and (4.8, -1.5) .. (5.0, -1.5) .. controls (5.2, -1.5) and (5.2, -2.5) .. (5.5, -2.5) .. controls (5.5, -2.0) and (6.0, -3.0) .. (8, -3.0);
+    
+    % Textos da tela
+    \node[font=\sffamily\bfseries\Huge, text=green!80!black] at (11, 0) {85};
+    \node[font=\sffamily\bfseries, text=green!80!black] at (11, 0.8) {HR};
+    
+    \node[font=\sffamily\bfseries\Huge, scale=1.5, text=cyan!80!white] at (11, -2.5) {96};
+    \node[font=\sffamily\bfseries, text=cyan!80!white] at (10, -2.0) {SpO2};
+    \node[font=\sffamily\bfseries, text=cyan!80!white] at (12, -2.0) {PI 0.8};
+\end{scope}
+
+% ==============================
+% 3. TEXTOS EM GRADE (Baixo)
+% ==============================
+
+\node[font=\sffamily\Large\bfseries, text=black, anchor=west] at (-19, 0) {PRECISÃO DA OXIMETRIA DE PULSO:};
+\node[font=\sffamily\normalsize, text=black, anchor=west] at (-19, -0.7) {Vários fatores \textbf{\textcolor{icublue}{podem afetar a precisão das leituras da oximetria de pulso}}, incluindo:};
+
+\begin{scope}[shift={(0, -2)}]
+
+    % Linha 1
+    \node[textbox, anchor=north] (t1) at (-15.5, 0) {
+        \toptitle{Tipo de Sensor e Posicionamento}
+        Pode ser aplicado em diferentes locais:
+        \titem{\textbf{Dedo -- mais preciso}; polegar pode ser superior a outros dedos.}
+        \titem{\textbf{Orelhas e Testa} -- levemente menos precisos, mas podem ser \textbf{\textcolor{icublue}{mais confiáveis em estados de vasoconstrição}} ou \underline{hipotermia}.}
+        *Não há sensor ideal; tentativa e erro ajudam a encontrar a melhor posição.*
+    };
+
+    \node[textbox, anchor=north] (t2) at (-8.5, 0) {
+        \toptitle{Estados de Baixo Fluxo}
+        Estados de baixa perfusão (como alta vasoconstrição ou baixo débito cardíaco) podem tornar o \textbf{\textcolor{icublue}{sinal de oximetria fraco ou indetectável}}. Isso dificulta o monitoramento de SpO2 em pacientes com \textbf{fluxo não-pulsátil} (como na ECMO ou LVAD).
+    };
+
+    \node[textbox, anchor=north] (t3) at (-1.5, 0) {
+        \toptitle{Menor Precisão em Baixo SpO2}
+        Devido à curva de calibração desenvolvida apenas com voluntários saudáveis, a \textbf{\textcolor{icublue}{SpO2 medida pode diferir significativamente da SaO2 em valores baixos}} (ex. SpO2 menor que 75\%).
+    };
+
+    % Linha 2
+    \node[textbox, anchor=north] (t4) at (-15.5, -6.5) {
+        \toptitle{Cor da Pele e Esmalte}
+        A oximetria pode \underline{superestimar a SpO2 em} \textbf{\textcolor{icublue}{indivíduos de pele negra}} (comparado à SaO2 arterial), principalmente em hipoxemia oculta. \textbf{Pacientes negros têm 3x mais risco de hipoxemia oculta}.
+        Esmaltes de unha podem diminuir a precisão, \textbf{\textcolor{icublue}{particularmente cores escuras}} (azul, verde, preto, marrom).
+    };
+
+    \node[textbox, anchor=north] (t5) at (-8.5, -5.5) {
+        \toptitle{Hemoglobina Anormal}
+        \titem{\textbf{Metemoglobinemia (MetHb):} causa leitura \textbf{\textcolor{icublue}{falsa}}, cravando perto de 85-88\%.}
+        \titem{\textbf{Carboxihemoglobinemia (CoHb):} causa leitura \textbf{falsamente normal} de SpO2 na casa dos 90-100\% (intoxicação por CO), escondendo a hipóxia grave.}
+        \titem{\textbf{HbA1c > 7:} pode causar \textbf{\textcolor{icublue}{superestimativa da SpO2}}, embora o efeito seja pequeno.}
+    };
+
+    \node[textbox, anchor=north] (t6) at (-1.5, -4.5) {
+        \toptitle{Hiperoxemia}
+        A hiperóxia é prejudicial (especialmente após \underline{parada cardíaca}), mas a oximetria de pulso não distingue um PaO2 normal de um supra-normal se a SpO2 está em 100\%. O alvo é SpO2 $\ge$ 94\%.
+    };
+
+    \node[textbox, anchor=north] (t7) at (-1.5, -8.5) {
+        \toptitle{Tempo de Atraso (Lag Time)}
+        Demora de \textbf{5 a 15 segundos} pro sangue ir do coração até a ponta do dedo. O \textbf{atraso (lag time)} é menor se o sensor for central e maior se o débito for baixo. Por isso o SpO2 pode continuar caindo num primeiro momento até a reoxigenação chegar lá.
+    };
+
+    \node[textbox, anchor=north] (t8) at (-1.5, -13.5) {
+        \toptitle{Efeitos de Medicamentos}
+        Azul de metileno, indocianina verde entre outros podem causar falsas leituras \textbf{baixas de SpO2}.
+    };
+    
+\end{scope}
+
+% ==============================
+% 4. ANÁLISE DE ONDA PLETISMOGRÁFICA (Direita Baixo)
+% ==============================
+\begin{scope}[shift={(10, 0)}]
+    \node[font=\sffamily\Large\bfseries, text=black, anchor=west] at (-2, 0) {\uppercase{Análise da Onda Pletismográfica}};
+    
+    \node[font=\sffamily\normalsize, text=black, anchor=north west, text width=6cm] (descwave) at (-2, -0.5) {
+        A onda pletismográfica possui componentes sistólicos \& diastólicos; o exame pode prover dicas fisiológicas sobre o \textbf{tônus e a compliance vascular}.
+    };
+
+    % Gráfico base ilustrativo
+    \begin{scope}[shift={(6, -1.5)}]
+        \draw[thick, gray, fill=gray!20] (0, 0) .. controls (0.5, 0) and (0.8, 1.5) .. (1.0, 1.5) .. controls (1.2, 1.5) and (1.2, 0.5) .. (1.5, 0.5) .. controls (1.5, 1.0) and (2.0, 0) .. (3, 0);
+        
+        \node[font=\sffamily\bfseries, text=green!70!black] at (0.2, 1.5) {Pico Sistólico};
+        \node[font=\sffamily\bfseries, text=orange] at (2.2, 1.2) {Pico Diastólico};
+        
+        \draw[dashed] (1.0, 0) -- (1.0, 1.5);
+        \draw[dashed] (1.5, 0) -- (1.5, 1.0);
+        \draw[latex-latex, thick] (1.0, 1.0) -- (1.5, 1.0) node[midway, above, font=\sffamily\bfseries] {$\Delta$T};
+    \end{scope}
+
+    % Variações
+    \node[wavebox, anchor=north] at (0, -4) {
+        \textbf{NORMAL}\\
+        \tikz{\draw[thick, icublue] (0, 0) .. controls (0.2, 0) and (0.4, 0.8) .. (0.5, 0.8) .. controls (0.6, 0.8) and (0.6, 0.3) .. (0.7, 0.3) .. controls (0.7, 0.6) and (1.0, 0) .. (1.5, 0);}
+    };
+
+    \node[wavebox, anchor=north] at (6, -4) {
+        \textbf{PULSAÇÕES VENOSAS (TR Grave)}\\
+        \textcolor{icublue}{Pico diastólico proeminente e tardio}\\
+        \tikz{\draw[thick, icublue] (0, 0) .. controls (0.2, 0) and (0.4, 0.8) .. (0.5, 0.8) .. controls (0.6, 0.8) and (0.6, 0.2) .. (0.8, 0.2) .. controls (1.0, 1.0) and (1.2, 0) .. (1.5, 0);}
+    };
+
+    \node[wavebox, anchor=north] at (0, -7) {
+        \textbf{SINAL FRACO}\\
+        \textcolor{icublue}{$\downarrow \downarrow$ índice de perfusão}\\
+        \tikz{\draw[thick, icublue] (0, 0) .. controls (0.2, 0) and (0.4, 0.2) .. (0.5, 0.2) .. controls (0.6, 0.2) and (0.8, 0) .. (1.5, 0);}
+    };
+
+    \node[wavebox, anchor=north] at (0, -10) {
+        \textbf{VASOCONSTRIÇÃO}\\
+        \textcolor{icublue}{$\uparrow$ pico diastólico}\\
+        \tikz{\draw[thick, icublue] (0, 0) .. controls (0.2, 0) and (0.4, 0.8) .. (0.5, 0.8) .. controls (0.6, 0.8) and (0.6, 0.5) .. (0.7, 0.5) .. controls (0.7, 0.7) and (1.0, 0) .. (1.5, 0);}
+    };
+
+    \node[wavebox, anchor=north] at (6, -10) {
+        \textbf{VASODILATAÇÃO}\\
+        \textcolor{icublue}{$\uparrow$ pico sistólico, $\downarrow$ pico diastólico}\\
+        \tikz{\draw[thick, icublue] (0, 0) .. controls (0.2, 0) and (0.4, 1.2) .. (0.5, 1.2) .. controls (0.6, 1.2) and (0.6, 0.1) .. (0.7, 0.1) .. controls (0.7, 0.3) and (1.0, 0) .. (1.5, 0);}
+    };
+
+    % CO-Oximetry Box
+    \node[basebox, fill=icugrey, anchor=north, text width=9cm] at (3, -13) {
+        \toptitle{CO-Oximetria}
+        Invés de apenas 2 comprimentos de onda, os co-oxímetros utilizam \textbf{4 comprimentos de luz} para medir acuradamente hemoglobinas anormais como a CarboxiHb e MetHb.
+    };
+
+\end{scope}
+
+\end{tikzpicture}%
+}
+\vspace*{\fill}
+\end{center}
+\end{document}
