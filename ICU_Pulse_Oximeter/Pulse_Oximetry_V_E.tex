@@ -1,0 +1,401 @@
+% =============================================================================
+% OXIMETRIA DE PULSO — ONE PAGER ICU
+% Versão E: "Light Through Tissue"
+% Conceito criativo: o infográfico é sobre LUZ — fundo escuro representa o
+% tecido que absorve, e as informações brilham como os fótons que o atravessam.
+% O espectro cromático organiza visualmente todo o conteúdo.
+% =============================================================================
+\documentclass[landscape,a3paper]{article}
+\usepackage[landscape,a3paper,margin=0mm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazilian]{babel}
+\usepackage{lmodern}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage{colortbl}
+\usepackage{booktabs}
+\usepackage{multicol}
+\usepackage{array}
+\usepackage{calc}
+\usepackage{tikz}
+\usepackage{amsmath,amssymb}
+\usetikzlibrary{arrows.meta, calc, positioning, decorations.pathreplacing}
+
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+
+% ---------------------------------------------------------------------------
+% PALETA: derivada dos comprimentos de onda reais da oximetria
+% ---------------------------------------------------------------------------
+\definecolor{tissue}{RGB}{12, 15, 24}       % Fundo = tecido escuro
+\definecolor{deepcard}{RGB}{18, 22, 36}     % Card background
+\definecolor{cardborder}{RGB}{35, 42, 65}   % Bordas sutis
+\definecolor{dimtext}{RGB}{140, 148, 170}   % Texto secundário
+\definecolor{bodytext}{RGB}{210, 215, 228}  % Texto principal
+
+% Espectro funcional
+\definecolor{red660}{RGB}{220, 50, 47}      % Red LED 660nm
+\definecolor{ir940}{RGB}{230, 160, 40}      % IR approx (representado como amber)
+\definecolor{oxy}{RGB}{56, 182, 255}        % OxyHb — ciano/azul
+\definecolor{deoxy}{RGB}{200, 60, 60}       % DeoxyHb — vermelho
+\definecolor{pleth}{RGB}{0, 220, 180}       % Onda pletismográfica — verde-ciano
+\definecolor{warn}{RGB}{255, 180, 40}       % Alertas
+\definecolor{warnbg}{RGB}{50, 40, 20}       % Fundo alerta
+\definecolor{safe}{RGB}{80, 200, 120}       % OK / normal
+
+\pagecolor{tissue}
+\color{bodytext}
+
+% ---------------------------------------------------------------------------
+% MACROS
+% ---------------------------------------------------------------------------
+
+% Card escuro com acento lateral
+\newcommand{\darkcard}[3]{% {cor acento}{título}{conteúdo}
+  \par\vspace{3pt}%
+  \noindent
+  \begin{tikzpicture}
+    \node[rectangle, rounded corners=3pt, fill=deepcard, draw=cardborder,
+          line width=0.4pt, inner sep=8pt,
+          text width=\dimexpr\linewidth-20pt, align=left] (box) {%
+        {\color{#1}\bfseries\scriptsize\MakeUppercase{#2}}\\[3pt]%
+        {\scriptsize\color{bodytext}#3}%
+    };
+    \fill[#1, rounded corners=1.5pt]
+        ([xshift=0.4pt]box.north west) rectangle ([xshift=2.5pt]box.south west);
+  \end{tikzpicture}\par%
+}
+
+% Ponto-chave
+\newcommand{\kp}[1]{{\color{pleth}\scriptsize\textbullet}\hspace{0.4em}{\scriptsize #1}\par\vspace{1.5pt}}
+
+% Alerta box
+\newcommand{\warnbox}[1]{%
+  \par\vspace{2pt}%
+  \noindent\colorbox{warnbg}{\parbox{\dimexpr\linewidth-6pt}{%
+    {\color{warn}\scriptsize\bfseries !}\hspace{0.3em}{\scriptsize\color{warn}#1}%
+  }}\par%
+}
+
+% Seção label
+\newcommand{\seclabel}[2]{%
+  \par\vspace{4pt}%
+  \noindent{\color{#1}\bfseries\footnotesize\MakeUppercase{#2}}%
+  \par\noindent{\color{#1}\rule{2.5cm}{1.5pt}}%
+  \par\vspace{2pt}%
+}
+
+\begin{document}
+
+% ==================================================================
+% HERO HEADER — Espectro de Absorção como elemento visual central
+% ==================================================================
+\noindent
+\begin{tikzpicture}[remember picture, overlay]
+  % Banda de gradiente no topo
+  \fill[left color=red660!30!tissue, right color=ir940!20!tissue]
+      (current page.north west) rectangle ([yshift=-5.5cm]current page.north east);
+  % Linha do espectro
+  \fill[left color=red660!60, right color=ir940!60]
+      ([yshift=-5.5cm]current page.north west) rectangle ([yshift=-5.65cm]current page.north east);
+\end{tikzpicture}
+
+\noindent
+\begin{minipage}[c][\dimexpr5.5cm][c]{\textwidth}
+  \hspace{2cm}%
+  \begin{minipage}[c]{0.32\textwidth}
+    {\fontsize{32}{36}\selectfont\bfseries\color{white}OXIMETRIA\\DE PULSO}\\[6pt]
+    {\small\color{dimtext}Monitorização Contínua da\\Saturação Arterial de Oxigênio}\\[3pt]
+    {\scriptsize\color{cardborder}One Pager ICU\enspace$\cdot$\enspace Nick Mark MD\enspace$\cdot$\enspace Tradução}
+  \end{minipage}%
+  \hspace{0.5cm}%
+  % --- ESPECTRO DE ABSORÇÃO HERO ---
+  \begin{minipage}[c]{0.38\textwidth}
+    \centering
+    \begin{tikzpicture}[scale=0.78, font=\sffamily\tiny]
+        % Grid sutil
+        \foreach \x in {0,1,...,7} { \draw[cardborder!30] (\x,0) -- (\x,4.5); }
+        \foreach \y in {0,1,...,4} { \draw[cardborder!30] (0,\y) -- (7,\y); }
+
+        % Eixos
+        \draw[->, dimtext] (0,0) -- (7.3,0) node[right, bodytext, scale=0.9] {$\lambda$ (nm)};
+        \draw[->, dimtext] (0,0) -- (0,4.8) node[above, bodytext, scale=0.9] {Absorção};
+
+        % Ticks
+        \foreach \x/\t in {0.5/600, 2/700, 3.5/800, 5/900, 6.5/1000} {
+            \draw[dimtext] (\x,0) -- (\x,-0.15) node[below, bodytext, scale=0.85] {\t};
+        }
+
+        % Curvas (com fill sutil)
+        \fill[oxy!8] (0.3, 4) .. controls (1.5, 3.5) and (2.5, 2) ..
+            (3.5, 2) .. controls (4.5, 2) and (5.5, 1.2) .. (6.8, 0.9) -- (6.8,0) -- (0.3,0) -- cycle;
+        \draw[ultra thick, oxy] (0.3, 4) .. controls (1.5, 3.5) and (2.5, 2) ..
+            (3.5, 2) .. controls (4.5, 2) and (5.5, 1.2) .. (6.8, 0.9);
+        \node[oxy, right, scale=0.9, font=\bfseries] at (6.8, 0.9) {OxyHb};
+
+        \fill[deoxy!8] (0.3, 1) .. controls (1, 2.2) and (2, 3.8) ..
+            (3.5, 3.8) .. controls (5, 3.8) and (6, 2.5) .. (6.8, 2.3) -- (6.8,0) -- (0.3,0) -- cycle;
+        \draw[ultra thick, deoxy] (0.3, 1) .. controls (1, 2.2) and (2, 3.8) ..
+            (3.5, 3.8) .. controls (5, 3.8) and (6, 2.5) .. (6.8, 2.3);
+        \node[deoxy, right, scale=0.9, font=\bfseries] at (6.8, 2.3) {DeoxyHb};
+
+        % Linhas de LED
+        \fill[red660!25] (0.9,0) rectangle (1.1,4.6);
+        \draw[red660, thick] (1.0,0) -- (1.0,4.6);
+        \node[above, red660, scale=0.85, font=\bfseries] at (1.0,4.6) {660\,nm};
+
+        \fill[ir940!15] (5.4,0) rectangle (5.6,4.6);
+        \draw[ir940, thick] (5.5,0) -- (5.5,4.6);
+        \node[above, ir940, scale=0.85, font=\bfseries] at (5.5,4.6) {940\,nm};
+    \end{tikzpicture}
+  \end{minipage}%
+  \hspace{0.5cm}%
+  % --- MINI MONITOR ---
+  \begin{minipage}[c]{0.22\textwidth}
+    \centering
+    \begin{tikzpicture}[scale=0.7]
+      \fill[deepcard, rounded corners=4pt] (0,0) rectangle (7,4.5);
+      \draw[cardborder, rounded corners=4pt, line width=0.6pt] (0,0) rectangle (7,4.5);
+
+      % ECG
+      \draw[safe!80, thick] (0.3,3.2) -- (1.2,3.2) -- (1.35,3.5) -- (1.5,2.5) -- (1.65,3.8) -- (1.8,2.9) -- (1.95,3.2) -- (2.8,3.2) -- (3.7,3.2) -- (3.85,3.5) -- (4.0,2.5) -- (4.15,3.8) -- (4.3,2.9) -- (4.45,3.2) -- (5.3,3.2);
+
+      % Pleth
+      \draw[pleth, thick] (0.3,1.2) .. controls (0.8,1.2) and (1.0,2.2) .. (1.2,2.2) .. controls (1.35,2.2) and (1.5,1.6) .. (1.6,1.6) .. controls (1.7,1.7) and (2.0,1.2) .. (2.5,1.2)
+                          .. controls (3.0,1.2) and (3.2,2.2) .. (3.4,2.2) .. controls (3.55,2.2) and (3.7,1.6) .. (3.8,1.6) .. controls (3.9,1.7) and (4.2,1.2) .. (4.7,1.2);
+
+      % Valores
+      \node[safe!80, font=\bfseries\large] at (6,3.5) {72};
+      \node[safe!80, font=\tiny] at (6,4.1) {HR};
+      \node[pleth, font=\bfseries\Large] at (6,1.8) {97};
+      \node[pleth, font=\tiny] at (6,2.5) {SpO\textsubscript{2}};
+      \node[pleth, font=\tiny] at (6,1.1) {PI 2.4};
+    \end{tikzpicture}
+  \end{minipage}%
+\end{minipage}
+
+\vspace{0.4cm}
+
+% ==================================================================
+% CONTEÚDO PRINCIPAL — 4 colunas no escuro
+% ==================================================================
+\noindent\hspace{8mm}%
+\begin{minipage}[t]{\dimexpr\textwidth-16mm\relax}
+
+\setlength{\columnsep}{8pt}
+\begin{multicols}{4}
+
+% =====================================================================
+% COL 1 — COMO FUNCIONA
+% =====================================================================
+
+\seclabel{oxy}{Como Funciona}
+
+\darkcard{oxy}{Princípio}{%
+  O sensor emite luz \textcolor{red660}{\textbf{vermelha}} (660\,nm) e \textcolor{ir940}{\textbf{infravermelha}} (940\,nm) através do tecido vascularizado.\\[2pt]
+  \kp{\textcolor{oxy}{OxyHb} absorve mais IR}
+  \kp{\textcolor{deoxy}{DeoxyHb} absorve mais Red}
+  \vspace{1pt}
+  A razão $R = \frac{(AC/DC)_{Red}}{(AC/DC)_{IR}}$ é convertida em SpO\textsubscript{2} por curva empírica.
+}
+
+\darkcard{oxy}{Componentes do Sinal}{%
+  \begin{tabular}{@{}>{\color{pleth}\bfseries\scriptsize}l >{\scriptsize}p{3.3cm}@{}}
+  AC & Pulsátil = sangue \textbf{arterial}. É o que o oxímetro mede. \\[2pt]
+  DC & Constante = tecido, osso, sangue venoso. Filtrado. \\
+  \end{tabular}
+}
+
+\darkcard{oxy}{Sensor}{%
+  \begin{tabular}{@{}>{\color{pleth}\bfseries\scriptsize}l >{\scriptsize}p{3.0cm}@{}}
+  Transmissão & Dedo, pé. LED$\leftrightarrow$Detector. \textbf{Mais preciso.} \\[2pt]
+  Reflexão & Testa, orelha. Mesma face. Mais rápido em choque. \\
+  \end{tabular}\\[3pt]
+  \kp{Polegar $>$ outros dedos (marginalmente)}
+  \kp{Orelha/Testa: melhor em vasoconstrição}
+  \kp{Nenhum local é \textit{sempre} superior}
+}
+
+% =====================================================================
+% COL 2 — ARMADILHAS CLÍNICAS
+% =====================================================================
+\columnbreak
+
+\seclabel{deoxy}{Armadilhas Clínicas}
+
+\darkcard{red660}{Pele Negra}{%
+  Melanina $\rightarrow$ absorção extra $\rightarrow$ \textbf{superestimação} da SpO\textsubscript{2}.\\[2pt]
+  \kp{\textbf{3$\times$ mais risco} de hipoxemia oculta}
+  \kp{Diferença de até \textbf{4--8\%} em hipoxemia moderada}
+  \warnbox{SpO\textsubscript{2} ``normal'' em pele negra NÃO exclui hipoxemia. Dosar SaO\textsubscript{2}!}
+}
+
+\darkcard{red660}{Hemoglobinas}{%
+  \begin{tabular}{@{}>{\bfseries\scriptsize\color{warn}}l >{\scriptsize}p{3.0cm}@{}}
+  CoHb & Falsamente \textbf{normal}. Sensor confunde CO com O\textsubscript{2}. Vítimas de incêndio! \\[3pt]
+  MetHb & ``Trava'' em \textbf{$\sim$85\%}. R$\rightarrow$1 independente da SaO\textsubscript{2} real. \\[3pt]
+  SulfaHb & Leitura espúria \textbf{baixa}. \\[3pt]
+  HbF & Não afeta significativamente. \\
+  \end{tabular}\\[3pt]
+  \kp{Co-oximetria (4+ $\lambda$) resolve: mede CoHb e MetHb direto.}
+}
+
+\darkcard{red660}{Esmalte \& Corantes}{%
+  \kp{Esmaltes escuros (azul, preto, verde) interferem}
+  \kp{\textcolor{warn}{Azul de metileno IV}: queda falsa súbita ($<$2\,min)}
+  \kp{Indocianina verde: queda falsa ($<$5\,min)}
+  \kp{Efeito transitório --- esperar washout}
+}
+
+% =====================================================================
+% COL 3 — LIMITAÇÕES TÉCNICAS
+% =====================================================================
+\columnbreak
+
+\seclabel{ir940}{Limitações Técnicas}
+
+\darkcard{ir940}{Baixo Fluxo}{%
+  \kp{Choque $\rightarrow$ $\downarrow$\,sinal AC $\rightarrow$ leitura instável}
+  \kp{ECMO\,/\,LVAD = fluxo não-pulsátil $\rightarrow$ oximetria \textbf{inútil}}
+  \kp{Hipotermia $\rightarrow$ vasoconstrição $\rightarrow$ probe central}
+  \warnbox{PI $<$ 0,4\% = sinal inadequado. Desconfiar da leitura.}
+}
+
+\darkcard{ir940}{Lag (Atraso)}{%
+  \begin{tabular}{@{}>{\bfseries\scriptsize\color{pleth}}l >{\scriptsize}c@{}}
+  Dedo & 5--15\,s \\
+  Orelha / Testa & 2--5\,s \\
+  Em hipotensão & prolongado \\
+  \end{tabular}\\[3pt]
+  \kp{SpO\textsubscript{2} pode \textbf{continuar caindo} após IOT correta}
+  \kp{Não usar como única confirmação de via aérea}
+}
+
+\darkcard{ir940}{Calibração}{%
+  \begin{tabular}{@{}>{\bfseries\scriptsize}l >{\scriptsize}l@{}}
+  SpO\textsubscript{2} $>$ 80\% & {\color{safe}$\pm$ 2\%} \\
+  70--80\% & {\color{warn}$\pm$ 3--5\%} \\
+  $<$ 70\% & {\color{red660}\textbf{Não confiável}} \\
+  \end{tabular}\\[2pt]
+  \kp{Curva derivada de voluntários saudáveis}
+}
+
+\darkcard{ir940}{Hiperoxemia}{%
+  SpO\textsubscript{2} = 100\% não diferencia PaO\textsubscript{2} normal de supra-normal.\\[2pt]
+  \kp{Alvo: \textcolor{pleth}{\textbf{94--98\%}}}
+  \kp{Hiperóxia: vasoconstrição cerebral, lesão oxidativa}
+  \kp{Pós-PCR: evitar PaO\textsubscript{2} $>$ 300\,mmHg}
+}
+
+\darkcard{ir940}{Movimento \& Luz}{%
+  \kp{Movimentos geram AC falso $\rightarrow$ leitura errática}
+  \kp{Luz ambiente intensa: cobrir sensor}
+  \kp{Tecnologias modernas (Masimo, Nellcor) filtram melhor}
+}
+
+% =====================================================================
+% COL 4 — ONDA PLETISMOGRÁFICA
+% =====================================================================
+\columnbreak
+
+\seclabel{pleth}{Onda Pletismográfica}
+
+\darkcard{pleth}{Anatomia da Onda}{%
+  \centering
+  \begin{tikzpicture}[scale=0.8, font=\sffamily\tiny]
+      \fill[pleth!8] (0,0) .. controls (0.2,0) and (0.5,2.6) .. (0.8,2.6)
+          .. controls (1.0,2.6) and (1.2,1.1) .. (1.5,1.1)
+          .. controls (1.8,1.5) and (2.6,0) .. (3.2,0) -- cycle;
+      \draw[thick, pleth] (0,0) .. controls (0.2,0) and (0.5,2.6) .. (0.8,2.6)
+          .. controls (1.0,2.6) and (1.2,1.1) .. (1.5,1.1)
+          .. controls (1.8,1.5) and (2.6,0) .. (3.2,0);
+      \draw[dashed, dimtext] (0.8,0) -- (0.8,2.6);
+      \draw[dashed, dimtext] (1.5,0) -- (1.5,1.1);
+      \node[above, pleth, font=\bfseries\tiny] at (0.8, 2.6) {Sístole};
+      \node[right, dimtext, scale=0.9] at (1.5, 1.2) {Dicrótico};
+      \draw[<->, bodytext, thin] (0.8,-0.25) -- (1.5,-0.25) node[midway, below, scale=0.85] {$\Delta$T};
+  \end{tikzpicture}
+  \par
+}
+
+\darkcard{pleth}{Padrões Clínicos}{%
+  {\color{safe}\scriptsize\bfseries NORMAL}\hfill{\color{dimtext}\scriptsize nó dicrótico visível}\\[2pt]
+  \begin{tikzpicture}[scale=0.42]
+      \draw[thick, safe] (0,0) .. controls (0.2,0) and (0.4,1) .. (0.5,1) .. controls (0.6,1) and (0.7,0.4) .. (0.8,0.4) .. controls (0.9,0.7) and (1.5,0) .. (2,0) (2,0) .. controls (2.2,0) and (2.4,1) .. (2.5,1) .. controls (2.6,1) and (2.7,0.4) .. (2.8,0.4) .. controls (2.9,0.7) and (3.5,0) .. (4,0) (4,0) .. controls (4.2,0) and (4.4,1) .. (4.5,1) .. controls (4.6,1) and (4.7,0.4) .. (4.8,0.4) .. controls (4.9,0.7) and (5.5,0) .. (6,0);
+  \end{tikzpicture}\\[5pt]
+  %
+  {\color{warn}\scriptsize\bfseries SINAL FRACO}\hfill{\color{dimtext}\scriptsize $\downarrow$ perfusão}\\[2pt]
+  \begin{tikzpicture}[scale=0.42]
+      \draw[thick, dimtext] (0,0) .. controls (0.2,0) and (0.4,0.25) .. (0.5,0.25) .. controls (0.6,0.25) and (0.7,0.08) .. (0.8,0.08) .. controls (0.9,0.13) and (1.5,0) .. (2,0) (2,0) .. controls (2.2,0) and (2.4,0.25) .. (2.5,0.25) .. controls (2.6,0.25) and (2.7,0.08) .. (2.8,0.08) .. controls (2.9,0.13) and (3.5,0) .. (4,0) (4,0) .. controls (4.2,0) and (4.4,0.25) .. (4.5,0.25) .. controls (4.6,0.25) and (4.7,0.08) .. (4.8,0.08) .. controls (4.9,0.13) and (5.5,0) .. (6,0);
+  \end{tikzpicture}\\[5pt]
+  %
+  {\color{red660}\scriptsize\bfseries VASOCONSTRIÇÃO}\hfill{\color{dimtext}\scriptsize $\uparrow$ dicrótico}\\[2pt]
+  \begin{tikzpicture}[scale=0.42]
+      \draw[thick, red660] (0,0) .. controls (0.2,0) and (0.4,1) .. (0.5,1) .. controls (0.6,1) and (0.7,0.7) .. (0.8,0.7) .. controls (0.9,0.9) and (1.5,0) .. (2,0) (2,0) .. controls (2.2,0) and (2.4,1) .. (2.5,1) .. controls (2.6,1) and (2.7,0.7) .. (2.8,0.7) .. controls (2.9,0.9) and (3.5,0) .. (4,0) (4,0) .. controls (4.2,0) and (4.4,1) .. (4.5,1) .. controls (4.6,1) and (4.7,0.7) .. (4.8,0.7) .. controls (4.9,0.9) and (5.5,0) .. (6,0);
+  \end{tikzpicture}\\[5pt]
+  %
+  {\color{oxy}\scriptsize\bfseries VASODILATAÇÃO}\hfill{\color{dimtext}\scriptsize $\uparrow$ sist.}\\[2pt]
+  \begin{tikzpicture}[scale=0.42]
+      \draw[thick, oxy] (0,0) .. controls (0.2,0) and (0.4,1.6) .. (0.5,1.6) .. controls (0.6,1.6) and (0.7,0.2) .. (0.8,0.2) .. controls (0.9,0.4) and (1.5,0) .. (2,0) (2,0) .. controls (2.2,0) and (2.4,1.6) .. (2.5,1.6) .. controls (2.6,1.6) and (2.7,0.2) .. (2.8,0.2) .. controls (2.9,0.4) and (3.5,0) .. (4,0) (4,0) .. controls (4.2,0) and (4.4,1.6) .. (4.5,1.6) .. controls (4.6,1.6) and (4.7,0.2) .. (4.8,0.2) .. controls (4.9,0.4) and (5.5,0) .. (6,0);
+  \end{tikzpicture}
+}
+
+\vspace{2pt}
+
+% REGRA DE OURO
+\noindent
+\begin{tikzpicture}
+  \node[rectangle, rounded corners=3pt, fill=warnbg, draw=warn!50, line width=0.6pt,
+        inner sep=8pt, text width=\dimexpr\linewidth-20pt, align=center] {%
+    {\color{warn}\bfseries\scriptsize REGRA DE OURO}\\[3pt]
+    {\scriptsize\color{bodytext}
+    Correlacione: \textcolor{pleth}{\textbf{Onda}} + \textbf{PI} + \textbf{Pulso palpável}}\\[2pt]
+    {\scriptsize Na dúvida: \textcolor{red660}{\textbf{Gasometria (SaO\textsubscript{2})}} = padrão-ouro}
+  };
+\end{tikzpicture}\par
+
+\vspace{2pt}
+
+% CHECKLIST
+\darkcard{pleth}{Checklist Rápido}{%
+  \begin{tabular}{@{}>{\color{pleth}\bfseries\scriptsize}p{2.2cm} >{\scriptsize}p{3.0cm}@{}}
+  SpO\textsubscript{2} baixa? & Checar sensor, PI, trocar dedo \\[2pt]
+  Onda ruim? & Aquecer mão, probe central \\[2pt]
+  Incêndio? & Ignorar SpO\textsubscript{2}. Pedir CoHb \\[2pt]
+  Cianose + SpO\textsubscript{2} ok? & Pensar MetHb \\[2pt]
+  Pós-IOT? & Lembrar lag 5--15\,s \\
+  \end{tabular}
+}
+
+\end{multicols}
+
+\end{minipage}
+
+% ==================================================================
+% RODAPÉ
+% ==================================================================
+\vfill
+\noindent
+\begin{tikzpicture}[remember picture, overlay]
+  \fill[left color=red660!15!tissue, right color=ir940!10!tissue]
+      ([yshift=0.8cm]current page.south west) rectangle (current page.south east);
+  \fill[left color=red660!50, right color=ir940!50]
+      ([yshift=0.8cm]current page.south west) rectangle ([yshift=0.85cm]current page.south east);
+\end{tikzpicture}
+\noindent\hspace{2cm}%
+{\scriptsize\color{dimtext}
+2 comprimentos de onda = OxyHb + DeoxyHb
+\enspace$\cdot$\enspace
+Co-oxímetros (7+ $\lambda$) = SpCO, SpMet, SpHb
+\enspace$\cdot$\enspace
+Material educacional
+\hfill
+\textbf{\color{bodytext}One Pager ICU\enspace$\cdot$\enspace 2025}
+}\hspace{2cm}%
+
+\vspace{0.3cm}
+
+\end{document}
