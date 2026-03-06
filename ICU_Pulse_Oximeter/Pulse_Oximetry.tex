@@ -119,14 +119,20 @@
 \begin{minipage}[t]{0.18\textwidth}
     % Gráfico do dedo
     \vspace{1cm}
-    \begin{tikzpicture}[scale=0.9, auto]
-        \fill[orange!20, rounded corners=6pt] (-2, -0.6) rectangle (1.5, 0.6); % dedo
-        \draw[ultra thick, icudark] (-1.5, 1.2) -- (0, 1.2) -- (0.8, 0.7) -- (1.5, 0.7) -- (1.5, -0.7) -- (0, -0.7) -- (-1.5, -1.2); % sensor outline
-        \node[font=\sffamily\bfseries\small, text=icudark] at (0, 1.7) {\textcolor{icured}{Red} LED \ \textcolor{icuorange}{IR} LED};
-        \node[font=\sffamily\bfseries\small, text=icudark] at (0, -1.7) {Fotodiodo};
+    \begin{tikzpicture}[scale=1.0, font=\sffamily]
+        % Dedo (Contorno técnico)
+        \draw[thick, icudark!50, fill=iculight] (-2.2, -0.7) .. controls (1, -0.7) and (1.5, -0.5) .. (1.8, 0) .. controls (1.5, 0.5) and (1, 0.7) .. (-2.2, 0.7);
+        \draw[icudark!30] (0.8, 0.5) .. controls (1.5, 0.5) and (1.8, 0.3) .. (1.8, 0) .. controls (1.8, -0.3) and (1.5, -0.5) .. (0.8, -0.5); % Unha
         
-        \draw[ultra thick, -Latex, icured] (0, 1) -- (0, -0.3);
-        \draw[ultra thick, -Latex, icuorange] (0.5, 1) -- (0.5, -0.3);
+        % Sensor Frame
+        \draw[ultra thick, icudark] (-0.8, 1.3) -- (1.0, 1.3) -- (1.8, 0.8) -- (2.0, 0.8) -- (2.0, -0.8) -- (1.8, -0.8) -- (1.0, -1.3) -- (-0.8, -1.3);
+        
+        \node[font=\bfseries\tiny, text=icudark] at (0.4, 1.6) {\textcolor{icured}{RED} \& \textcolor{icuorange}{IR} LEDS};
+        \node[font=\bfseries\tiny, text=icudark] at (0.4, -1.6) {FOTODIODO};
+        
+        % Raios
+        \draw[dashed, icured, -Latex, thick] (0.2, 1.1) -- (0.2, -1.1);
+        \draw[dashed, icuorange, -Latex, thick] (0.6, 1.1) -- (0.6, -1.1);
     \end{tikzpicture}
 \end{minipage}%
 \begin{minipage}[t]{0.35\textwidth}
