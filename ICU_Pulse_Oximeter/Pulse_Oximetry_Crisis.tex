@@ -17,8 +17,11 @@
   Scale=0.95
 ]
 \newfontfamily\headerfont{Helvetica Neue Condensed Bold}[Scale=1.4]
-\newfontfamily\idfont{Helvetica Neue Condensed Bold}[Scale=2.2]
-\newfontfamily\idlabelfont{Helvetica Neue Bold}[Scale=0.6]
+\newfontfamily\idfont{Helvetica Neue Condensed Bold}[Scale=3.5]
+\newfontfamily\idsubfont{Helvetica Neue Condensed Bold}[Scale=1.6]
+\newfontfamily\idlabelfont{Helvetica Neue Bold}[Scale=0.65]
+\newfontfamily\sectionlabelfont{Helvetica Neue Bold}[Scale=0.45]
+\newfontfamily\sectionnumfont{Helvetica Neue Condensed Bold}[Scale=0.9]
 
 % --- CORES ---
 \definecolor{crisisBlue}{RGB}{0, 150, 210} 
@@ -33,7 +36,7 @@
 
 % --- MACROS DE LAYOUT ---
 
-\newcommand{\crisisHeader}[4]{% #1=cor, #2=título, #3=subtítulo, #4=ID
+\newcommand{\crisisHeader}[5]{% #1=cor, #2=título, #3=subtítulo, #4=ID num, #5=ID letra
     \begin{tikzpicture}[remember picture, overlay]
         \fill[#1] ($(current page.north west)+(0,0)$) rectangle ($(current page.north east)+(0,-3.2cm)$);
         
@@ -55,13 +58,18 @@
         };
 
         % ID BOX
-        \fill[white, rounded corners=3pt] ($(current page.north east)+(-3.5cm,-0.4cm)$) rectangle ($(current page.north east)+(-0.3cm,-2.8cm)$);
-        \node[#1, anchor=center] at ($(current page.north east)+(-1.9cm,-1.0cm)$) {\idfont #4};
-        \node[#1, anchor=center] at ($(current page.north east)+(-1.9cm,-1.8cm)$) {\idlabelfont CRISIS PROTOCOLS};
-        \fill[#1] ($(current page.north east)+(-3.5cm,-2.1cm)$) rectangle ($(current page.north east)+(-1.95cm,-2.7cm)$);
-        \fill[#1] ($(current page.north east)+(-1.85cm,-2.1cm)$) rectangle ($(current page.north east)+(-0.3cm,-2.7cm)$);
-        \node[white, anchor=center] at ($(current page.north east)+(-2.72cm,-2.4cm)$) {\idlabelfont SECTION ONE};
-        \node[white, anchor=center] at ($(current page.north east)+(-1.07cm,-2.4cm)$) {\idlabelfont SECTION TWO};
+        \node[fill=white, rounded corners=6pt, inner sep=6pt, anchor=north east] at ($(current page.north east)+(-0.4cm,-0.4cm)$) {
+            \begin{minipage}{3.4cm}
+                \centering
+                \vspace{2pt}
+                {\color{#1}\idfont #4\rlap{\raisebox{12pt}{\idsubfont #5}}}\\[-2pt]
+                {\color{#1}\idlabelfont CRISIS PROTOCOLS}\\[2pt]
+                {\setlength{\fboxsep}{2pt}\colorbox{#1}{\parbox{1.5cm}{\centering\color{white}\sectionlabelfont SECTION\\[-2pt]\sectionnumfont ONE}}%
+                 \hspace{0.05cm}%
+                 \colorbox{#1}{\parbox{1.5cm}{\centering\color{white}\sectionlabelfont SECTION\\[-2pt]\sectionnumfont TWO}}}\\[3pt]
+                {\color{#1}\idlabelfont CRISIS PROCEDURES}\\[2pt]
+            \end{minipage}
+        };
     \end{tikzpicture}
     \vspace{3.0cm}
 }
@@ -92,7 +100,7 @@
 
 \begin{document}
 
-\crisisHeader{crisisBlue}{Oxímetro}{de Pulso SpO\textsubscript{2}}{42\textsubscript{A}}
+\crisisHeader{crisisBlue}{Oxímetro}{de Pulso SpO\textsubscript{2}}{42}{A}
 
 \textbf{AUTOR:} Nick Mark MD | \textbf{TRADUÇÃO:} Equipe ICU\par
 \vspace{0.3cm}
