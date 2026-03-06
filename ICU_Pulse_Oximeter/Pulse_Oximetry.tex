@@ -1,10 +1,9 @@
 \documentclass[10pt]{article}
 \usepackage[paperwidth=42cm, paperheight=30cm, margin=1.5cm]{geometry} % A3 Landscape
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
+\usepackage{fontspec}
+\setmainfont{Helvetica Neue}
+\setsansfont{Helvetica Neue}
 \usepackage[brazil]{babel}
-\usepackage{lmodern}
-\renewcommand{\familydefault}{\sfdefault}
 
 \usepackage{graphicx}
 \usepackage{xcolor}
@@ -12,29 +11,29 @@
 \usepackage{tikz}
 \usetikzlibrary{calc, positioning, arrows.meta, shapes.geometric, decorations.pathreplacing, shadows, fit, backgrounds}
 
-% --- PALETA DE CORES (Baseada no One Pager) ---
-\definecolor{icured}{RGB}{205,32,44}       % LED Red
-\definecolor{icublue}{RGB}{0,111,180}      % OxyHb / SpO2
-\definecolor{icuorange}{RGB}{240,110,0}    % IR LED / IR Signal
-\definecolor{icugrey}{RGB}{210,210,210}    % Caixas título
-\definecolor{iculight}{RGB}{245,245,248}   % Fundo caixas
-\definecolor{icudark}{RGB}{40,40,40}       % Textos escuros
-\definecolor{screenbg}{RGB}{35,35,40}      % Fundo do monitor
+% --- PALETA DE CORES (Premium Tailwind Inspired) ---
+\definecolor{icured}{RGB}{225,29,72}       % Rose 600 - LED Red
+\definecolor{icublue}{RGB}{2,132,199}      % Light Blue 600 - OxyHb / SpO2
+\definecolor{icuorange}{RGB}{245,158,11}   % Amber 500 - IR LED / IR Signal
+\definecolor{icugrey}{RGB}{226,232,240}    % Slate 200 - Caixas título/borda
+\definecolor{iculight}{RGB}{248,250,252}   % Slate 50 - Fundo caixas
+\definecolor{icudark}{RGB}{15,23,42}       % Slate 900 - Textos escuros
+\definecolor{screenbg}{RGB}{15,23,42}      % Slate 900 - Fundo do monitor
 
 % Custom Bullet Emulation
 \newcommand{\titem}[1]{\hangindent=2ex\raisebox{0.2ex}{\textcolor{icudark}{\footnotesize$\bullet$}}\hspace{0.5ex}#1\par\vspace{0.4ex}}
 
 \pagestyle{empty}
 
-% MACROS DE CAIXAS TIKZ PARA NÃO USAR TCOLORBOX
+% MACROS DE CAIXAS TIKZ (Modernas e com Sombra Suave)
 \newcommand{\infobox}[2]{
     \noindent
     \begin{tikzpicture}
-        \node[rectangle, rounded corners=4pt, draw=icugrey, thick, fill=iculight,
-              inner sep=12pt, text width=\linewidth-24pt, align=left,
-              font=\sffamily\small, drop shadow={shadow xshift=1.5pt, shadow yshift=-1.5pt}] (box)
+        \node[rectangle, rounded corners=6pt, draw=icugrey, line width=0.8pt, fill=white,
+              inner sep=14pt, text width=\linewidth-28pt, align=left,
+              font=\sffamily\small\color{icudark}, drop shadow={shadow xshift=2pt, shadow yshift=-2pt, opacity=0.1}] (box)
               {
-                \textbf{#1}\\[1.5ex]
+                {\textcolor{icublue}{\textbf{\Large #1}}}\\[1.5ex]
                 #2
               };
     \end{tikzpicture}\par\vspace{0.6cm}
@@ -42,9 +41,9 @@
 
 \newcommand{\flowbox}[1]{
     \begin{tikzpicture}
-        \node[rectangle, rounded corners=4pt, fill=icugrey, text=icudark,
-              inner sep=8pt, text width=8.2cm, align=center,
-              font=\sffamily\bfseries\itshape\small, drop shadow={shadow xshift=1.5pt, shadow yshift=-1.5pt}, minimum height=1.6cm] 
+        \node[rectangle, rounded corners=6pt, fill=iculight, draw=icublue!40, line width=1pt, text=icudark,
+              inner sep=10pt, text width=8.2cm, align=center,
+              font=\sffamily\bfseries\small, drop shadow={shadow xshift=2pt, shadow yshift=-2pt, opacity=0.1}, minimum height=1.6cm] 
               {#1};
     \end{tikzpicture}
 }
@@ -52,7 +51,7 @@
 \begin{document}
 \begin{center}
 \vspace*{\fill}
-\scalebox{0.70}{%
+\scalebox{0.68}{%
 \begin{minipage}{\textwidth}
 
 % =========================================================
