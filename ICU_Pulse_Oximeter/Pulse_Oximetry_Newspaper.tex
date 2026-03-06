@@ -1,0 +1,206 @@
+\documentclass[10pt]{article}
+\usepackage[paperwidth=42cm, paperheight=30cm, margin=2cm]{geometry} % A3 Landscape
+\usepackage{fontspec}
+\setmainfont{Charter}
+\newfontfamily\headerfont{Helvetica Neue}
+\usepackage[brazil]{babel}
+
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usetikzlibrary{calc, positioning, arrows.meta, shapes.geometric, decorations.pathreplacing, fit, backgrounds}
+
+% --- PALETA DE CORES SÓBRIA (Newspaper Style) ---
+\definecolor{navy}{RGB}{15, 23, 42}       % Texto principal e acento
+\definecolor{accent}{RGB}{2, 132, 199}     % Azul para saturação (único ponto de cor)
+\definecolor{lightgrey}{RGB}{241, 245, 249} % Fundo sutil
+\definecolor{border}{RGB}{148, 163, 184}   % Linhas de separação
+\definecolor{redaccent}{RGB}{153, 27, 27}  % Vermelho sóbrio para o LED
+
+% Custom Bullet
+\newcommand{\titem}[1]{\hangindent=2.5ex\raisebox{0.2ex}{\textcolor{navy}{\footnotesize$\blacktriangleright$}}\hspace{0.8ex}#1\par\vspace{0.6ex}}
+
+\pagestyle{empty}
+
+% MACROS DE CAIXAS ESTILO COLUNA DE JORNAL
+\newcommand{\newsbox}[2]{
+    \noindent
+    \begin{minipage}{\linewidth}
+        \vspace{0.4cm}
+        {\headerfont\bfseries\large\textcolor{navy}{\uppercase{#1}}}\\[0.5ex]
+        \drawline\\[1.5ex]
+        {\small #2}
+        \vspace{0.4cm}
+    \end{minipage}\par
+}
+
+\newcommand{\drawline}{\noindent\textcolor{border}{\rule{\linewidth}{0.6pt}}}
+
+\begin{document}
+\begin{center}
+\vspace*{\fill}
+\scalebox{0.68}{%
+\begin{minipage}{\textwidth}
+
+% =========================================================
+% TOP: HEADER ESTILO JORNAL
+% =========================================================
+\begin{center}
+    {\headerfont\fontsize{54}{60}\bfseries\selectfont \uppercase{Oximetria de Pulso}}\\[0.4cm]
+    \textcolor{border}{\rule{18cm}{2pt}}\\[0.3cm]
+    {\large\textit{Protocolologia Crítica e Monitorização Técnica \textbullet\ por Nick Mark MD \textbullet\ Tradução Profissional}}\\[0.8cm]
+\end{center}
+
+\noindent
+\begin{minipage}[t]{0.7\textwidth}
+    \headerfont\textbf{\large PRINCÍPIO FISIOLÓGICO:}\\
+    {\small A oximetria de pulso constitui a monitorização contínua da saturação de oxigênio da hemoglobina através de espectrofotometria. O dispositivo analisa a absorbância diferencial entre a \textbf{hemoglobina oxigenada (OxyHb)} e a \textbf{desoxigenada (DeoxyHb)} ao submeter o tecido a comprimentos de onda específicos nos espectros \textbf{vermelho} e \textbf{infravermelho}.}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.28\textwidth}
+    \begin{flushright}
+        \headerfont\textbf{\small INDEX: PALS-ICU-024}\\
+        \drawline\\
+        {\footnotesize onepagericu.com \textbullet\ @nickmmark}
+    \end{flushright}
+\end{minipage}
+
+\vspace{1.2cm}
+
+% =========================================================
+% DIAGRAMAS TÉCNICOS (DEDO E GRÁFICOS AGRUPADOS)
+% =========================================================
+\noindent
+\begin{tikzpicture}[remember picture, overlay, shift={(current page.center)}]
+    % Placeholder for layout matching, logic goes inside minipages below for flow
+\end{tikzpicture}
+
+\noindent
+\begin{minipage}[t]{0.5\textwidth}
+    \newsbox{Mecânica do Sensor}{
+        \begin{minipage}[c]{0.45\linewidth}
+            % Redesenho técnico do dedo
+            \begin{tikzpicture}[scale=1.1]
+                % Dedo (Contorno técnico)
+                \draw[thick, navy!60, fill=lightgrey!50] (-2, -0.7) .. controls (1, -0.7) and (1.5, -0.5) .. (1.8, 0) .. controls (1.5, 0.5) and (1, 0.7) .. (-2, 0.7);
+                % Unha
+                \draw[navy!40] (0.8, 0.5) .. controls (1.5, 0.5) and (1.8, 0.3) .. (1.8, 0) .. controls (1.8, -0.3) and (1.5, -0.5) .. (0.8, -0.5);
+                
+                % Sensor superior
+                \draw[thick, navy] (-0.5, 1.2) -- (0.8, 1.2) -- (0.8, 0.8) -- (-0.5, 0.8) -- cycle;
+                \node at (0.15, 1.0) {\tiny\headerfont LED};
+                
+                % Sensor inferior
+                \draw[thick, navy] (-0.5, -1.2) -- (0.8, -1.2) -- (0.8, -0.8) -- (-0.5, -0.8) -- cycle;
+                \node at (0.15, -1.0) {\tiny\headerfont SENSOR};
+                
+                % Raios de luz
+                \draw[dashed, redaccent, -Latex] (0.15, 0.8) -- (0.15, -0.8);
+                \node[right, redaccent] at (0.15, 0.4) {\tiny 660nm};
+                \draw[dashed, navy, -Latex] (0.45, 0.8) -- (0.45, -0.8);
+                \node[right, navy] at (0.45, -0.4) {\tiny 940nm};
+            \end{tikzpicture}
+        \end{minipage}\hfill
+        \begin{minipage}[c]{0.5\linewidth}
+            Luz emitida atravessa o leito capilar pulsátil. O fotodetector oposto mede a intensidade da luz não absorvida.\\[1ex]
+            \titem{O componente \textbf{AC} (pulsátil) isola o sangue arterial.}
+            \titem{O componente \textbf{DC} (constante) filtra tecidos, ossos e sangue venoso.}
+        \end{minipage}
+    }
+    
+    \newsbox{Espectro de Absorção}{
+        \centering
+        \begin{tikzpicture}[scale=0.85, font=\headerfont]
+            \draw[->, border] (0,0) -- (6,0) node[right] {\tiny nm};
+            \draw[->, border] (0,0) -- (0,4) node[above] {\tiny Abs};
+            
+            % Curvas
+            \draw[ultra thick, accent] (0, 3.5) .. controls (2, 2.8) and (3, 2) .. (5.5, 1) node[right] {\tiny OxyHb};
+            \draw[ultra thick, redaccent!70] (0, 1) .. controls (1, 2) and (2, 3) .. (3, 3) .. controls (4, 3) and (5, 2.2) .. (5.5, 2.2) node[right] {\tiny DeoxyHb};
+            
+            % Linhas verticais técnicas
+            \draw[dotted, navy] (0.8, 0) -- (0.8, 3.8) node[above, scale=0.7] {RED};
+            \draw[dotted, navy] (4.8, 0) -- (4.8, 3.8) node[above, scale=0.7] {IR};
+            
+            \node[below, scale=0.6] at (0.8, 0) {660};
+            \node[below, scale=0.6] at (4.8, 0) {940};
+        \end{tikzpicture}
+    }
+\end{minipage}\hfill
+\begin{minipage}[t]{0.45\textwidth}
+    \newsbox{Forma de Onda (Pletismografia)}{
+        \begin{minipage}[c]{\linewidth}
+            \centering
+            % Monitor clean
+            \begin{tikzpicture}
+                \draw[navy!40, fill=lightgrey!30, rounded corners=2pt] (0,0) rectangle (10, 4.5);
+                
+                % Waveflow
+                \draw[thick, accent] (0.5, 1) .. controls (1.5, 1) and (1.8, 3) .. (2, 3) .. controls (2.2, 3) and (2.4, 2) .. (2.6, 2) .. controls (2.8, 2.2) and (3.1, 1) .. (4, 1)
+                                      .. controls (5.0, 1) and (5.3, 3) .. (5.5, 3) .. controls (5.7, 3) and (5.9, 2) .. (6.1, 2) .. controls (6.3, 2.2) and (6.6, 1) .. (7.5, 1);
+                
+                \node[font=\headerfont\bfseries, accent] at (8.5, 3.5) {\Large 98};
+                \node[font=\headerfont, scale=0.6, navy] at (8.5, 4) {SpO2 \%};
+                
+                \node[font=\headerfont\bfseries, navy!70] at (8.5, 1.5) {\Large 72};
+                \node[font=\headerfont, scale=0.6, navy] at (8.5, 2) {PR bpm};
+                
+                % Annotations
+                \draw[dashed, border] (2,3) -- (2,0.5);
+                \node[below, scale=0.5, navy] at (2, 0.5) {SÍSTOLE};
+                \draw[dashed, border] (2.6,2) -- (2.6,0.5);
+                \node[below, scale=0.5, navy] at (2.6, 0.5) {NÓ DICRÓTICO};
+            \end{tikzpicture}
+        \end{minipage}\\[1.5ex]
+        {\small A análise da onda pletismográfica valida a confiabilidade do valor numérico. Uma curva bem definida com nó dicrótico visível sugere perfusão adequada.}
+    }
+\end{minipage}
+
+\vspace{0.8cm}
+\drawline
+\vspace{0.4cm}
+
+% =========================================================
+% TIER INFERIOR: COLUNAS DE JORNAL
+% =========================================================
+\noindent
+\begin{minipage}[t]{0.31\textwidth}
+    \newsbox{Fatores de Precisão}{
+        \titem{\textbf{Pigmentação da Pele:} Melanina absorve luz. A SpO2 pode superestimar a saturação real em pacientes de pele negra, ocultando hipoxemias graves.}
+        \titem{\textbf{Esmaltes:} Cores escuras (Preto, Azul, Verde) interferem significativamente na leitura.}
+        \titem{\textbf{Perfusão:} Choque e vasoconstrição severa reduzem o sinal pulsátil.}
+    }
+\end{minipage}\hfill
+\begin{minipage}[t]{0.32\textwidth}
+    \newsbox{Interferências Químicas}{
+        \titem{\textbf{Carboxi-Hb:} Falsamente normal. O sensor não distingue CO da O2.}
+        \titem{\textbf{Met-Hb:} Leitura "travada" em 85\% independente do valor real.}
+        \titem{\textbf{Corantes:} Azul de metileno causa queda súbita e falsa no SpO2.}
+    }
+\end{minipage}\hfill
+\begin{minipage}[t]{0.31\textwidth}
+    \newsbox{Limitações Técnicas}{
+        \titem{\textbf{Atraso (Lag):} Periférico (5-15s). Durante ressuscitação, a leitura no monitor reflete o estado passado.}
+        \titem{\textbf{Movimento:} Artefatos podem mimetizar ondas reais.}
+        \titem{\textbf{Curva Shift:} Calibração limitada abaixo de 70\% de saturação.}
+    }
+\end{minipage}
+
+\vspace{1.5cm}
+
+\begin{minipage}[t]{0.45\textwidth}
+    \headerfont\textbf{SUMÁRIO TÉCNICO:}\\
+    {\small Sempre correlacione a forma de onda com o pulso palper. Em casos de dúvida sobre a precisão (Pele negra, intoxicação por CO, choque), a \textbf{gasometria arterial (SaO2)} permanece o padrão-ouro mandatório.}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.45\textwidth}
+    \begin{flushright}
+        \textcolor{border}{\headerfont\fontsize{30}{30}\selectfont \uppercase{Critical Care Technical Series}}
+    \end{flushright}
+\end{minipage}
+
+\end{minipage}%
+}
+\vspace*{\fill}
+\end{center}
+\end{document}
